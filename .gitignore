@@ -1,0 +1,5 @@
+/target
+docker-compose.yaml
+db
+.env
+configuration.yaml

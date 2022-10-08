@@ -1,0 +1,30 @@
+[package]
+name = "pf"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"
+
+
+[dependencies]
+actix-web = "4.2.1"
+tokio = { version = "1.21.2", features = ["full"] }
+ulid = "1.0.0"
+serde = { version = "1.0.145", features = ["derive"] }
+serde_json = "1.0.85"
+config = "0.13.2"
+chrono = { version = "0.4.22",features = ["serde", "rustc-serialize"] }
+env_logger = "0.9.1"
+log = "0.4.17"
+tracing = { version = "0.1.37", features = ["log"] }
+anyhow = "1.0.65"
+async-trait = "0.1.57"
+[dev-dependencies]
+reqwest = {version = "0.11.12", features = ["json"] }
+rand = "0.8.5"
+
+[dependencies.sqlx]
+version = "0.6.2"
+default-features = false
+features = ["runtime-actix-rustls", "macros", "mysql", "chrono", "migrate"]
