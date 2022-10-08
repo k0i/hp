@@ -1,19 +1,32 @@
 use std::net::TcpListener;
 
+use chrono::Utc;
+use once_cell::sync::Lazy;
+use pf::telemetry::{get_subscriber, init_subscriber};
 use pf::{
     configuration::{get_configuration, DatabaseSettings},
-    domain::{
-        article::Article,
-        common::{Domain, ID},
-    },
+    domain::model::common::ID,
 };
 use sqlx::{Connection, Executor, MySqlConnection, MySqlPool};
+
+static TRACING: Lazy<()> = Lazy::new(|| {
+    let default_filter_level = "info".to_string();
+    let subscriber_name = "test".to_string();
+    if std::env::var("TEST_LOG").is_ok() {
+        let subscriber = get_subscriber(subscriber_name, default_filter_level, std::io::stdout);
+        init_subscriber(subscriber);
+    } else {
+        let subscriber = get_subscriber(subscriber_name, default_filter_level, std::io::sink);
+        init_subscriber(subscriber);
+    };
+});
 
 pub struct TestApp {
     pub address: String,
     pub connection_pool: MySqlPool,
 }
 pub async fn spawn_app() -> TestApp {
+    Lazy::force(&TRACING);
     let mut config = get_configuration().expect("Failed to read configuration.");
     let rand_db = ulid::Ulid::new().to_string();
     config.database.database_name = rand_db;
@@ -50,14 +63,14 @@ pub async fn configure_database(config: &DatabaseSettings) -> MySqlPool {
 }
 
 pub async fn seed_articles(connection_pool: MySqlPool, title: &str, content: &str) {
-    let (id, created_at, updated_at) = Article::new();
+    let id = ID::new();
     sqlx::query!(
         "INSERT INTO articles (id, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
         id as ID,
         title,
         content,
-        created_at,
-        updated_at
+        Utc::now(),
+        Utc::now()
     )
     .execute(&connection_pool)
     .await

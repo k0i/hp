@@ -1,6 +1,5 @@
-use rand::Rng;
-
 use crate::helpers::{seed_articles, spawn_app};
+use rand::Rng;
 
 #[tokio::test]
 async fn list() {
