@@ -1,15 +1,16 @@
 mod routes;
 use std::net::TcpListener;
 
-use env_logger::Env;
 use pf::configuration::get_configuration;
 use pf::startup::run;
+use pf::telemetry::{get_subscriber, init_subscriber};
 use pf::*;
 use sqlx::MySqlPool;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    let subscriber = get_subscriber("web", "info", std::io::stdout);
+    init_subscriber(subscriber);
     let configuration = get_configuration().expect("Failed to read configuration.");
     let connection_pool = MySqlPool::connect(&configuration.database.connect_string())
         .await

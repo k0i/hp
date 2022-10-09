@@ -4,4 +4,5 @@ pub mod dto;
 pub mod infra;
 pub mod routes;
 pub mod startup;
+pub mod telemetry;
 pub mod usecase;

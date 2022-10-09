@@ -1,30 +1,51 @@
+use crate::{
+    domain::{
+        model::article::Article,
+        repository::{article_repository::ArticleRepository, common::BaseRepository},
+    },
+    dto::article::ArticleDTO,
+    infra::repository::article_repository_impl::ArticleRepositoryImpl,
+};
+use anyhow::Result;
 use tracing::Span;
 
-use crate::domain::{model::article::Article, repository::article_repository::ArticleRepository};
-use anyhow::Result;
-
-pub struct ArticleUsecase {
-    repository: Box<dyn ArticleRepository>,
-    span: Span,
+pub struct ArticleUsecase<T>
+where
+    T: ArticleRepository + BaseRepository<Article>,
+{
+    repository: T,
 }
 
-impl ArticleUsecase {
-    pub fn new(repository: Box<dyn ArticleRepository>, span: Span) -> Self {
-        Self { repository, span }
+impl<T> ArticleUsecase<T>
+where
+    T: ArticleRepository,
+{
+    pub fn new(repository: T) -> Self {
+        Self { repository }
     }
 }
 
-impl ArticleUsecase {
-    async fn get(&self, id: crate::domain::model::common::ID) -> Result<Article> {
-        self.repository.get(id).await
+impl ArticleUsecase<ArticleRepositoryImpl> {
+    pub async fn get(&self, id: crate::domain::model::common::ID, span: Span) -> Result<Article> {
+        self.repository.get(&id, span).await
     }
-    async fn list(&self) -> Result<Vec<Article>> {
-        self.repository.list().await
+    pub async fn list(&self, span: Span) -> Result<Vec<Article>> {
+        self.repository.list(span).await
     }
-    async fn create(&self, entity: Article) -> Result<Article> {
-        self.repository.create(entity).await
+    pub async fn create(&self, dto: ArticleDTO, span: Span) -> Result<Article> {
+        let article = Article::new(dto.title, dto.content);
+        self.repository.create(article, span).await
     }
-    async fn update(&self, entity: Article) -> Result<Article> {
-        self.repository.update(entity).await
+    pub async fn update(&self, dto: ArticleDTO, span: Span) -> Result<Article> {
+        let get_span = Span::current();
+        let mut article = self.repository.get(&dto.id, get_span).await?;
+        article.set_title(dto.title);
+        article.set_content(dto.content);
+        self.repository.update(article, span).await
+    }
+    pub async fn delete(&self, id: crate::domain::model::common::ID, span: Span) -> Result<()> {
+        let get_span = Span::current();
+        let article = self.repository.get(&id, get_span).await?;
+        self.repository.delete(article, span).await
     }
 }
