@@ -27,7 +27,7 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
         .fetch_one(&self.connection)
         .instrument(span)
         .await
-        .with_context(|| "failed to fetch articles")
+        .with_context(|| "failed to get article in database session")
     }
     async fn list(&self, span: Span) -> Result<Vec<Article>> {
         sqlx::query_as!(
@@ -37,7 +37,7 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
         .fetch_all(&self.connection)
         .instrument(span)
         .await
-        .with_context(|| "failed to fetch articles")
+        .with_context(|| "failed to list articles in database session")
     }
     async fn create(&self, entity: Article, span: Span) -> Result<Article> {
         sqlx::query!(
@@ -51,7 +51,7 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
         .execute(&self.connection)
         .instrument(span)
         .await
-        .with_context(|| "failed to create article")?;
+        .with_context(|| "failed to create article in database session")?;
         let get_span = Span::current();
         self.get(entity.id(), get_span).await
     }
@@ -66,7 +66,7 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
         .execute(&self.connection)
         .instrument(span)
         .await
-        .with_context(|| "failed to update article")?;
+        .with_context(|| "failed to update article in database session")?;
         let get_span = Span::current();
         self.get(entity.id(), get_span).await
     }
@@ -75,7 +75,7 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
             .execute(&self.connection)
             .instrument(span)
             .await
-            .with_context(|| "failed to create article")?;
+            .with_context(|| "failed to delete article in database session")?;
         Ok(())
     }
 }

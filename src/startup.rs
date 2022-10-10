@@ -20,6 +20,9 @@ pub fn run(listener: TcpListener, connection_pool: MySqlPool) -> Result<Server, 
             .service(health_check)
             .service(articles::list)
             .service(articles::create)
+            .service(articles::get)
+            .service(articles::update)
+            .service(articles::delete)
             .app_data(usecases.clone())
     })
     .listen(listener)?
