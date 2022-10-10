@@ -74,5 +74,5 @@ pub async fn seed_articles(connection_pool: MySqlPool, title: &str, content: &st
     )
     .execute(&connection_pool)
     .await
-    .unwrap();
+    .expect("seed_articles failed.");
 }

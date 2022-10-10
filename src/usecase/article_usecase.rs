@@ -3,7 +3,7 @@ use crate::{
         model::article::Article,
         repository::{article_repository::ArticleRepository, common::BaseRepository},
     },
-    dto::article::ArticleDTO,
+    dto::article::{CreateArticleDTO, DeleteArticleDTO, UpdateArticleDTO},
     infra::repository::article_repository_impl::ArticleRepositoryImpl,
 };
 use anyhow::Result;
@@ -32,20 +32,20 @@ impl ArticleUsecase<ArticleRepositoryImpl> {
     pub async fn list(&self, span: Span) -> Result<Vec<Article>> {
         self.repository.list(span).await
     }
-    pub async fn create(&self, dto: ArticleDTO, span: Span) -> Result<Article> {
+    pub async fn create(&self, dto: CreateArticleDTO, span: Span) -> Result<Article> {
         let article = Article::new(dto.title, dto.content);
         self.repository.create(article, span).await
     }
-    pub async fn update(&self, dto: ArticleDTO, span: Span) -> Result<Article> {
+    pub async fn update(&self, dto: UpdateArticleDTO, span: Span) -> Result<Article> {
         let get_span = Span::current();
         let mut article = self.repository.get(&dto.id, get_span).await?;
         article.set_title(dto.title);
         article.set_content(dto.content);
         self.repository.update(article, span).await
     }
-    pub async fn delete(&self, id: crate::domain::model::common::ID, span: Span) -> Result<()> {
+    pub async fn delete(&self, dto: DeleteArticleDTO, span: Span) -> Result<()> {
         let get_span = Span::current();
-        let article = self.repository.get(&id, get_span).await?;
+        let article = self.repository.get(&dto.id, get_span).await?;
         self.repository.delete(article, span).await
     }
 }

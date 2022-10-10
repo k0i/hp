@@ -16,3 +16,14 @@ impl Default for ID {
         Self::new()
     }
 }
+impl From<String> for ID {
+    fn from(id: String) -> Self {
+        Self(id)
+    }
+}
+
+impl std::fmt::Display for ID {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
