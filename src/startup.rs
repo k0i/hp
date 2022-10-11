@@ -15,8 +15,10 @@ pub fn run(listener: TcpListener, connection_pool: MySqlPool) -> Result<Server, 
     let usecases = Usecases::new(repositories);
     let usecases: SharedUsecases = web::Data::new(usecases);
     let server = HttpServer::new(move || {
+        let cors = actix_cors::Cors::permissive();
         App::new()
             .wrap(TracingLogger::default())
+            .wrap(cors)
             .service(health_check)
             .service(articles::list)
             .service(articles::create)

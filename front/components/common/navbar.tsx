@@ -5,86 +5,89 @@ import {
   HStack,
   Link,
   IconButton,
-  useDisclosure,
   useColorModeValue,
-  Stack,
-  Icon,
+  Text,
+  Button,
+  Heading,
 } from "@chakra-ui/react";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { AiOutlineClose } from "react-icons/ai";
 import { FaGithub } from "react-icons/fa";
+import { useRouter } from "next/router";
+import NextLink from "next/link";
 
-const Links = ["Top", "Whoami", "Posts"];
+const Links: Array<{ name: string; path: string }> = [
+  { name: "Top", path: "/" },
+  { name: "Whoami", path: "/whoami" },
+  { name: "Posts", path: "posts" },
+];
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"#"}
-  >
-    {children}
-  </Link>
+const NavLink = ({
+  name,
+  path,
+  highlight,
+}: {
+  name: string;
+  path: string;
+  highlight: boolean;
+}) => (
+  <NextLink href={path} passHref>
+    <Link
+      px={2}
+      py={1}
+      rounded={"md"}
+      _hover={{
+        textDecoration: "underline",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+      href={path}
+    >
+      {highlight ? (
+        <Button color="purple.500" isDisabled={true}>
+          {name}
+        </Button>
+      ) : (
+        <Button color="purple.500">{name}</Button>
+      )}
+    </Link>
+  </NextLink>
 );
 
 export const NavBar = ({ children }: { children: ReactNode }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const router = useRouter();
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <IconButton
-            size={"md"}
-            icon={
-              isOpen ? (
-                <Icon as={AiOutlineClose} />
-              ) : (
-                <Icon as={GiHamburgerMenu} />
-              )
-            }
-            aria-label={"Open Menu"}
-            display={{ md: "none" }}
-            onClick={isOpen ? onClose : onOpen}
-          />
           <HStack spacing={8} alignItems={"center"}>
-            <HStack
-              as={"nav"}
-              spacing={4}
-              display={{ base: "none", md: "flex" }}
-            >
+            <HStack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink
+                  key={link.name}
+                  name={link.name}
+                  path={link.path}
+                  highlight={router.pathname === link.path}
+                />
               ))}
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>
+            <Heading fontWeight={600} fontSize="xl">
+              Blog Hut_
+              <Text as="em" color={"orange.400"}>
+                K
+              </Text>
+            </Heading>
             <Link href="https://github.com/k0i/hp" isExternal>
               <IconButton
                 aria-label="Github Repository"
                 fontSize="30px"
                 icon={<FaGithub />}
+                ml={10}
               />
             </Link>
           </Flex>
         </Flex>
-
-        {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </Stack>
-          </Box>
-        ) : null}
       </Box>
-
-      <Box p={4}>{children}</Box>
+      <Box p={2}>{children}</Box>
     </>
   );
 };
