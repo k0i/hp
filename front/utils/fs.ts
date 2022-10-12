@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { Article } from "../types/article";
+import { WakatimeInfo } from "../types/wakatime";
+import { AtcoderInfo } from "../types/atcoder";
 
 export const getPath = (folder: string) => {
   return path.join(process.cwd(), `/${folder}`);
@@ -36,3 +38,9 @@ export const getLastArticle = (folder: string): Article => {
     getFileContent(articles[articles.length - 1], folder)
   ) as Article;
 };
+
+export const getLatestWakatimeInfo = (): WakatimeInfo =>
+  JSON.parse(fs.readFileSync("wakatime.json", "utf8")) as WakatimeInfo;
+
+export const getLatestAtcoderInfo = (): AtcoderInfo =>
+  JSON.parse(fs.readFileSync("atcoder.json", "utf8")) as AtcoderInfo;

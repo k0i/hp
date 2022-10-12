@@ -5,15 +5,36 @@ import {
   Stack,
   Text,
   Box,
-  SlideFade,
-  ScaleFade,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  Flex,
+  StatArrow,
 } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import type { GetStaticProps } from "next";
 import Head from "next/head";
+import { AtcoderRateIndicatior } from "../components/atcoder/atcoderRateIndicatior";
+import { AtcoderSolveDelta } from "../components/atcoder/atcoderSolveDelta";
 import { AwsBadge } from "../components/common/awsBadge";
 import { NavBar } from "../components/common/navbar";
+import { DownloadButton } from "../components/downloadButton";
+import { AtcoderInfo } from "../types/atcoder";
+import { WakatimeInfo } from "../types/wakatime";
+import { generateAtcoderRateGradientColor } from "../utils/atcoderRateColor";
+import { diffDates, getPastDate } from "../utils/date";
+import { getLatestAtcoderInfo, getLatestWakatimeInfo } from "../utils/fs";
 
-const Home: NextPage = () => {
+const Home = (props: WakatimeInfo & AtcoderInfo) => {
+  const hoursOfCoding = props.daily_avg.data.current_user.total.text;
+  const dailyAvg = props.daily_avg.data.current_user.daily_average.text;
+  const mostUsedLanguage = props.language.data.languages[0];
+  const atcoderLatestContest = props.latestContest;
+  const atcoderAcCount = props.acCount;
+  const atcoderContestParticipationCount = props.contestParticipationCount;
+  const today = new Date();
+  const { day } = diffDates(new Date("2020-04-01"), today);
+
   return (
     <>
       <Head>
@@ -22,10 +43,171 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar>
-        <AwsBadge width={128} height={128} />
+        <Container maxW={"100%"} py={5} centerContent={true}>
+          <Container maxW={"95%"} py={4} centerContent={true} bgColor="white">
+            <Heading size="xl" py={4}>
+              Who am I ?
+            </Heading>
+            <DownloadButton
+              colorScheme="purple"
+              variant="outline"
+              href="/resume_sojiro_koyama.docx"
+              label="Resume"
+            />
+            <Stack direction="row" spacing={2} pt={4} pb={2} w="70%">
+              <Stat
+                border="1px"
+                borderColor="gray.200"
+                p={2}
+                borderRadius="lg"
+                bgColor="purple.50"
+                boxShadow="md"
+              >
+                <StatLabel>Days since I became an Engineer</StatLabel>
+                <StatNumber>{day} days</StatNumber>
+                <StatHelpText>2020-04-01 ~ {getPastDate(0)}</StatHelpText>
+              </Stat>
+              <Stat
+                border="1px"
+                borderColor="gray.200"
+                p={2}
+                borderRadius="lg"
+                boxShadow="md"
+              >
+                <StatLabel>Hours of coding last year</StatLabel>
+                <StatNumber>{hoursOfCoding}</StatNumber>
+                <StatHelpText>Daily Avg: {dailyAvg}</StatHelpText>
+              </Stat>
+              <Stat
+                border="1px"
+                borderColor="gray.200"
+                p={2}
+                borderRadius="lg"
+                bgColor="blue.50"
+                boxShadow="md"
+              >
+                <StatLabel>Most used language</StatLabel>
+                <StatNumber>
+                  <Box>{mostUsedLanguage.name}</Box>
+                </StatNumber>
+                <StatLabel>
+                  Total Hours:{" "}
+                  <Text as="em">
+                    {mostUsedLanguage.total_seconds / 3600} Hs
+                  </Text>
+                </StatLabel>
+              </Stat>
+            </Stack>
+            <Flex w="70%" pb={2}>
+              <Stat
+                boxShadow="sm"
+                flex="2"
+                border="1px"
+                borderColor="gray.200"
+                p={2}
+                borderRadius="lg"
+                bgGradient={generateAtcoderRateGradientColor(
+                  atcoderLatestContest.Performance
+                )}
+              >
+                <StatLabel>Latest Atcoder Contest</StatLabel>
+                <StatNumber>
+                  Performance: {atcoderLatestContest.Performance}
+                </StatNumber>
+                <StatHelpText>{atcoderLatestContest.ContestName}</StatHelpText>
+              </Stat>
+              <Stat
+                boxShadow="md"
+                border="1px"
+                borderColor="gray.200"
+                ml={2}
+                p={2}
+                borderRadius="lg"
+              >
+                <StatLabel>Number of Atcoder contest entries</StatLabel>
+                <StatNumber>
+                  <Text as="i">{atcoderContestParticipationCount} </Text>
+                  times
+                </StatNumber>
+                <StatHelpText>
+                  Last participation:{" "}
+                  {atcoderLatestContest.EndTime.substring(0, 10)}
+                </StatHelpText>
+              </Stat>
+            </Flex>
+            <Stack direction="row" spacing={2} pb={4} w="70%" boxShadow="sm">
+              <AtcoderRateIndicatior
+                oldRating={atcoderLatestContest.OldRating}
+                newRating={atcoderLatestContest.NewRating}
+              />
+              <Stat
+                border="1px"
+                borderColor="gray.200"
+                p={2}
+                borderRadius="lg"
+                boxShadow="md"
+              >
+                <StatLabel>
+                  Atcoder AC counts{" "}
+                  <Text as="cite" pl={2}>
+                    (from {getPastDate(1)})
+                  </Text>
+                </StatLabel>
+                <StatNumber pr={4}>
+                  {atcoderAcCount} ({props.solveCount.ac_rank}th)
+                </StatNumber>
+                <StatHelpText>
+                  <AtcoderSolveDelta
+                    previous={props.previousCount}
+                    latest={props.solveCount}
+                  />
+                </StatHelpText>
+              </Stat>
+            </Stack>
+          </Container>
+          <Container maxW={"95%"} py={4} centerContent={true} bgColor="white">
+            <Heading size="xl" py={4}>
+              Stats
+            </Heading>
+            <SimpleGrid columns={2} spacingX="1px" spacingY="20px" width="95%">
+              <Box>
+                <figure>
+                  <embed src="https://wakatime.com/share/@koyama1003/891ce5ad-d3bf-4150-8462-068686975c30.svg"></embed>
+                </figure>
+              </Box>
+              <Box>
+                <figure>
+                  <embed src="https://wakatime.com/share/@koyama1003/e58e9a42-ee0a-4797-8a93-862dba7b5c44.svg"></embed>
+                </figure>
+              </Box>
+            </SimpleGrid>
+          </Container>
+          <Container maxW={"95%"} py={2} centerContent={true} bgColor="white">
+            <Heading size="xl" py={4}>
+              Achivement
+            </Heading>
+            <AwsBadge width={200} height={200} />
+          </Container>
+        </Container>
       </NavBar>
     </>
   );
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const wakatimeInfo = await getLatestWakatimeInfo();
+  const atcoderInfo = await getLatestAtcoderInfo();
+  return {
+    props: {
+      language: wakatimeInfo.language,
+      daily_avg: wakatimeInfo.daily_avg,
+      latestContest: atcoderInfo.latestContest,
+      acCount: atcoderInfo.acCount,
+      solveCount: atcoderInfo.solveCount,
+      contestParticipationCount: atcoderInfo.contestParticipationCount,
+      previousCount: atcoderInfo.previousCount,
+    },
+  };
+};

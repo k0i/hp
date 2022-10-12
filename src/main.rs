@@ -17,5 +17,8 @@ async fn main() -> std::io::Result<()> {
         .expect("Failed to connect to Database.");
     let addr = format!("127.0.0.1:{}", configuration.application_port);
     let listener = TcpListener::bind(addr).expect("Failed to bind random port");
-    run(listener, connection_pool)?.await
+    match run(listener, connection_pool, configuration.wakatime_api_key) {
+        Ok(server) => server.await,
+        _ => panic!("Failed to run server"),
+    }
 }
