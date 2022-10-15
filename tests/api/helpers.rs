@@ -33,8 +33,8 @@ pub async fn spawn_app() -> TestApp {
     let connection_pool = configure_database(&config.database).await;
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
-    let server =
-        pf::startup::run(listener, connection_pool.clone()).expect("Failed to bind address");
+    let server = pf::startup::run(listener, connection_pool.clone(), config.wakatime_api_key)
+        .expect("Failed to bind address");
     let _ = tokio::spawn(server);
     let address = format!("http://127.0.0.1:{}", port);
     TestApp {

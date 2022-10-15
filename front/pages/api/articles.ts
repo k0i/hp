@@ -3,13 +3,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Article } from "../../types/article";
 import { getPath } from "../../utils/fs";
 
-type Data = {
-  name: string;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<{}>
 ) {
   try {
     const response = await fetch(
@@ -23,9 +19,9 @@ export default async function handler(
         JSON.stringify(a),
         (err) => {
           if (err) {
-            console.log("Error writing file", err);
+            console.log("Error writing articles into file", err);
           } else {
-            console.log("Successfully wrote file");
+            console.log("Successfully wrote articles into file");
           }
         }
       )

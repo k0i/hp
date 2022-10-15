@@ -1,5 +1,5 @@
 import { Container, Text, Heading, Box, Link } from "@chakra-ui/react";
-import type { GetStaticProps, NextPage } from "next";
+import type { GetStaticProps } from "next";
 import Head from "next/head";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -24,12 +24,19 @@ const Home = ({ title, content, date }: TopPageProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar>
-        <Container maxW={"100%"} py="10" centerContent={true}>
-          <Heading size="xl" as="h1">
+        <Container maxW={"100%"} py={5} centerContent={true}>
+          <Heading size="xl" py={2} as="h1">
             {title}
           </Heading>
+          <Text as="em">{date}</Text>
         </Container>
-        <Container maxW={"85%"} borderWidth="1px" borderRadius="lg" px={10}>
+        <Container
+          maxW={"85%"}
+          borderWidth="1px"
+          borderRadius="lg"
+          px={10}
+          bgColor="white"
+        >
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
@@ -52,7 +59,7 @@ const Home = ({ title, content, date }: TopPageProps) => {
                 <Heading {...props} as="h6" size="xs" p={4} />
               ),
               blockquote: ({ node, ...props }) => (
-                <Box bg="gray.300" w="100%" p={4}>
+                <Box bg="gray.100" w="100%" p={4}>
                   <Text as="cite">{props.children}</Text>
                 </Box>
               ),
