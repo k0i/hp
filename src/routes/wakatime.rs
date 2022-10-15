@@ -12,7 +12,7 @@ pub async fn wakatime(_: HttpRequest, usecases: SharedUsecases) -> impl Responde
 
     let res = usecases.wakatime_usecase.get().await;
     if res.is_err() {
-        tracing::error!("Failed to get wakatime info");
+        tracing::error!("Failed to get wakatime info: {:?}", res.unwrap_err());
         return HttpResponse::InternalServerError().finish();
     }
     let wakatime_data = res.unwrap();

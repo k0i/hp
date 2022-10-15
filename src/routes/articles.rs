@@ -20,7 +20,7 @@ pub async fn list(_: HttpRequest, usecases: SharedUsecases) -> impl Responder {
         .await
         .map(|articles| HttpResponse::Ok().json(articles))
         .unwrap_or_else(|e| {
-            tracing::error!("failed to list articles: {}", e);
+            tracing::error!("failed to list articles: {:?}", e);
             HttpResponse::InternalServerError().finish()
         })
 }

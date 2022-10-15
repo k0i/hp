@@ -4,7 +4,6 @@ use crate::{
         repository::{article_repository::ArticleRepository, common::BaseRepository},
     },
     dto::article::{CreateArticleDTO, DeleteArticleDTO, UpdateArticleDTO},
-    infra::repository::article_repository_impl::ArticleRepositoryImpl,
 };
 use anyhow::Result;
 use tracing::Span;
@@ -25,7 +24,10 @@ where
     }
 }
 
-impl ArticleUsecase<ArticleRepositoryImpl> {
+impl<T> ArticleUsecase<T>
+where
+    T: ArticleRepository + BaseRepository<Article>,
+{
     pub async fn get(&self, id: crate::domain::model::common::ID, span: Span) -> Result<Article> {
         self.repository.get(&id, span).await
     }

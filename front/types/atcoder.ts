@@ -1,19 +1,23 @@
+export interface AtcoderContestResult {
+  IsRated: boolean;
+  Place: number;
+  OldRating: number;
+  NewRating: number;
+  Performance: number;
+  ContestName: String;
+  EndTime: String;
+  ContestScreenName: string;
+}
 interface AtcoderContestInfo {
-  latestContest: {
-    IsRated: boolean;
-    Place: number;
-    OldRating: number;
-    NewRating: number;
-    Performance: number;
-    ContestName: String;
-    EndTime: String;
-  };
+  contestHistories: AtcoderContestResult[];
+}
+export interface AtcoderAcResult {
+  ac_count: number;
+  ac_rank: number;
+  created_at: string;
 }
 interface AtcoderHistory {
-  acCount: number;
-  contestParticipationCount: number;
-  solveCount: { ac_count: number; ac_rank: number };
-  previousCount: { ac_count: number; ac_rank: number };
+  acCountHistories: AtcoderAcResult[];
 }
 
 export interface AtcoderInfo extends AtcoderContestInfo, AtcoderHistory {}

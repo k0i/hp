@@ -12,9 +12,9 @@ pub async fn atcoder(_: HttpRequest, usecases: SharedUsecases) -> impl Responder
     let query_span = tracing::info_span!("start list atcoder info database session");
     let res = usecases.atcoder_usecase.get(query_span).await;
     if res.is_err() {
-        tracing::error!("Failed to get atcoder info");
+        tracing::error!("Failed to get atcoder info: {:?}", res.unwrap_err());
         return HttpResponse::InternalServerError().finish();
     }
-    let wakatime_data = res.unwrap();
-    HttpResponse::Ok().json(wakatime_data)
+    let data = res.unwrap();
+    HttpResponse::Ok().json(data)
 }

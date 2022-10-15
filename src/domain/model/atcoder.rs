@@ -1,23 +1,32 @@
-#![allow(non_snake_case)]
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
+use crate::infra::datamodel;
+
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct AtcoderContestHistory {
-    IsRated: bool,
-    Place: u32,
-    OldRating: u16,
-    NewRating: u16,
-    Performance: u16,
-    ContestName: String,
-    EndTime: String,
+    is_rated: bool,
+    place: u32,
+    old_rating: u16,
+    new_rating: u16,
+    performance: u16,
+    contest_name: String,
+    contest_screen_name: String,
+    end_time: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AtcoderSolveCount {
-    pub ac_count: i32,
-    pub ac_rank: i32,
+    id: i32,
+    ac_count: i32,
+    ac_rank: i32,
+    created_at: DateTime<Utc>,
 }
 impl AtcoderSolveCount {
+    pub fn id(&self) -> i32 {
+        self.id
+    }
     pub fn ac_count(&self) -> i32 {
         self.ac_count
     }
@@ -30,44 +39,47 @@ impl AtcoderSolveCount {
     pub fn set_ac_rank(&mut self, ac_rank: i32) {
         self.ac_rank = ac_rank;
     }
-    pub fn new(ac_count: i32, ac_rank: i32) -> Self {
-        Self { ac_count, ac_rank }
+    pub fn created_at(&self) -> DateTime<Utc> {
+        self.created_at
+    }
+    pub fn set_created_at(&mut self, created_at: DateTime<Utc>) {
+        self.created_at = created_at;
+    }
+    pub fn new(id: i32, ac_count: i32, ac_rank: i32, created_at: DateTime<Utc>) -> Self {
+        Self {
+            id,
+            ac_count,
+            ac_rank,
+            created_at,
+        }
     }
 }
-#[derive(Debug, Serialize, Deserialize)]
-pub struct AtcoderSolveCounts {
-    pub latest: AtcoderSolveCount,
-    pub previous: AtcoderSolveCount,
-}
-impl AtcoderSolveCounts {
-    pub fn new(latest: AtcoderSolveCount, previous: AtcoderSolveCount) -> Self {
-        Self { latest, previous }
+impl From<datamodel::atcoder_history::AtcoderSolveCountHistory> for AtcoderSolveCount {
+    fn from(datamodel: datamodel::atcoder_history::AtcoderSolveCountHistory) -> Self {
+        Self {
+            id: datamodel.id,
+            ac_count: datamodel.ac_count,
+            ac_rank: datamodel.ac_rank,
+            created_at: datamodel.created_at,
+        }
     }
 }
 
 #[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct AtcoderData {
-    latestContest: AtcoderContestHistory,
-    acCount: i32,
-    contestParticipationCount: u16,
-    solveCount: AtcoderSolveCount,
-    previousCount: AtcoderSolveCount,
+    ac_count_histories: Vec<AtcoderSolveCount>,
+    contest_histories: Vec<AtcoderContestHistory>,
 }
 
 impl AtcoderData {
     pub fn new(
-        latest_contest: AtcoderContestHistory,
-        ac_count: i32,
-        contest_participation_count: u16,
-        solve_count: AtcoderSolveCount,
-        previous_count: AtcoderSolveCount,
+        ac_count_histories: Vec<AtcoderSolveCount>,
+        contest_histories: Vec<AtcoderContestHistory>,
     ) -> Self {
         Self {
-            latestContest: latest_contest,
-            acCount: ac_count,
-            contestParticipationCount: contest_participation_count,
-            solveCount: solve_count,
-            previousCount: previous_count,
+            ac_count_histories,
+            contest_histories,
         }
     }
 }

@@ -8,7 +8,7 @@ import { NavBar } from "../components/common/navbar";
 import { getLastArticle } from "../utils/fs";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 type TopPageProps = {
   title: string;

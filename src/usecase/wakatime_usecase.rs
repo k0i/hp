@@ -1,8 +1,7 @@
 use anyhow::Result;
 
-use crate::{
-    domain::{model::wakatime::WakatimeData, repository::wakatime_repository::WakatimeRepository},
-    infra::repository::wakatime_repository_impl::WakatimeRepositoryImpl,
+use crate::domain::{
+    model::wakatime::WakatimeData, repository::wakatime_repository::WakatimeRepository,
 };
 
 pub struct WakatimeUsecase<T>
@@ -21,10 +20,18 @@ where
     }
 }
 
-impl WakatimeUsecase<WakatimeRepositoryImpl> {
+impl<T> WakatimeUsecase<T>
+where
+    T: WakatimeRepository,
+{
     pub async fn get(&self) -> Result<WakatimeData> {
         let wakatime_daily_avg = self.repository.get_wakatime_daily_average().await?;
         let wakatime_language = self.repository.get_wakatime_language().await?;
-        Ok(WakatimeData::new(wakatime_language, wakatime_daily_avg))
+        let wakatime_activities = self.repository.get_wakatime_activities().await?;
+        Ok(WakatimeData::new(
+            wakatime_language,
+            wakatime_daily_avg,
+            wakatime_activities,
+        ))
     }
 }
