@@ -11,7 +11,7 @@ use async_trait::async_trait;
 use chrono::Utc;
 use reqwest::Client;
 use sqlx::MySqlPool;
-use tracing::{Instrument, Span};
+use tracing::Span;
 
 pub struct AtcoderRepositoryImpl {
     client: Client,
