@@ -7,7 +7,7 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import React from "react";
-import { generateAtcoderRateGradientColor } from "../../utils/atcoderRateColor";
+import { generateAtcoderGradientColor } from "../../../utils/atcoderRateColor";
 
 interface Props {
   oldRating: number;
@@ -15,14 +15,14 @@ interface Props {
 }
 export const AtcoderRateIndicatior = ({ oldRating, newRating }: Props) => {
   const rateDelta = newRating - oldRating;
-
+  const latestRateColor = generateAtcoderGradientColor(newRating);
   return (
     <Stat
       border="1px"
       borderColor="gray.200"
       p={2}
       borderRadius="lg"
-      bgGradient={generateAtcoderRateGradientColor(newRating)}
+      bgGradient={`linear(to-t, ${latestRateColor.color} ,white ${latestRateColor.ratio}%)`}
     >
       <StatLabel>Atcoder Rate</StatLabel>
       <StatNumber>{newRating}</StatNumber>

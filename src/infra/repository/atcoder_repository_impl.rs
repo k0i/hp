@@ -1,12 +1,14 @@
 use crate::{
     domain::{
-        model::atcoder::{AtcoderContestHistory, AtcoderSolveCount, AtcoderSolveCounts},
+        model::atcoder::{AtcoderContestHistory, AtcoderSolveCount},
         repository::atcoder_repository::AtcoderRepository,
     },
     dto::atcoder::AtcoderSolveCountDTO,
+    infra::datamodel::{self, atcoder_history::AtcoderSolveCountHistory},
 };
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use async_trait::async_trait;
+use chrono::Utc;
 use reqwest::Client;
 use sqlx::MySqlPool;
 use tracing::{Instrument, Span};
@@ -38,7 +40,7 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
         }
         Ok(histories.unwrap())
     }
-    async fn list_problem_solve_histories(&self, span: Span) -> Result<AtcoderSolveCounts> {
+    async fn list_problem_solve_histories(&self, span: Span) -> Result<Vec<AtcoderSolveCount>> {
         let history = self
             .client
             .get("https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=k_xor_yama")
@@ -53,40 +55,96 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
         }
         let history = history.unwrap();
         let get_span = Span::current();
-        let last_one = self.get_latest_problem_solve_history(get_span).await;
-        let entity = AtcoderSolveCount::new(history.count(), history.rank());
-        sqlx::query!(
+        let mut last_one = match self.get_latest_problem_solve_history(get_span).await {
+            Ok(h) => h,
+            Err(e) => {
+                let h = AtcoderSolveCount::new(1, history.count(), history.rank(), Utc::now());
+                for cause in e.chain() {
+                    if let Some(sqlx::Error::RowNotFound) = cause.downcast_ref() {
+                        continue;
+                    }
+                    bail!(e)
+                }
+                h
+            }
+        };
+        if last_one.created_at().timestamp() - Utc::now().timestamp() > 60 * 60 * 24 {
+            self.create_problem_solve_history(last_one, span).await?;
+        } else {
+            tracing::warn!(
+                "The last data is too new. This operation is supposed to be called once in a day"
+            );
+            last_one.set_ac_rank(history.rank());
+            last_one.set_ac_count(history.count());
+            self.update_problem_solve_history(last_one, span).await?;
+        }
+        let list_span = Span::current();
+        let data = sqlx::query_as!(
+            datamodel::atcoder_history::AtcoderSolveCountHistory,
+            "select id, ac_count, ac_rank, created_at from atcoder_histories ORDER BY id ASC"
+        )
+        .fetch_all(&self.connection)
+        .instrument(list_span)
+        .await
+        .with_context(|| "failed to list atcoder solve histories in database session")?;
+        Ok(data.into_iter().map(|d| d.into()).collect())
+    }
+
+    async fn create_problem_solve_history(
+        &self,
+        entity: AtcoderSolveCount,
+        span: Span,
+    ) -> Result<AtcoderSolveCount> {
+        let mut data: AtcoderSolveCountHistory = entity.into();
+        let res = sqlx::query!(
             "INSERT INTO atcoder_histories (ac_count,ac_rank) VALUES (?, ?)",
-            entity.ac_count(),
-            entity.ac_rank()
+            data.ac_count,
+            data.ac_rank
         )
         .execute(&self.connection)
         .instrument(span)
         .await
         .with_context(|| "failed to create atcoder_histories in database session")?;
-        match last_one {
-            Ok(last_one) => {
-                let solve_counts = AtcoderSolveCounts::new(entity, last_one);
-                return Ok(solve_counts);
-            }
-            Err(e) => {
-                tracing::warn!("There seems to be no solve data in database. {}", e);
-                let solve_counts = AtcoderSolveCounts::new(
-                    entity,
-                    AtcoderSolveCount::new(history.count(), history.rank()),
-                );
-                return Ok(solve_counts);
-            }
-        }
+        data.id = res.last_insert_id() as i32;
+        Ok(data.into())
     }
+    async fn update_problem_solve_history(
+        &self,
+        entity: AtcoderSolveCount,
+        span: Span,
+    ) -> Result<AtcoderSolveCount> {
+        let data: AtcoderSolveCountHistory = entity.into();
+        sqlx::query!(
+            "Update atcoder_histories set ac_count = ?, ac_rank = ? WHERE id = ?",
+            data.ac_count,
+            data.ac_rank,
+            data.id
+        )
+        .execute(&self.connection)
+        .instrument(span)
+        .await
+        .with_context(|| "failed to update atcoder_histories in database session")?;
+        Ok(data.into())
+    }
+
     async fn get_latest_problem_solve_history(&self, span: Span) -> Result<AtcoderSolveCount> {
-        sqlx::query_as!(
-            AtcoderSolveCount,
-            "select ac_rank, ac_count from atcoder_histories order by id DESC limit 1",
+        match sqlx::query_as!(
+            AtcoderSolveCountHistory,
+            "select id, ac_rank, ac_count, created_at from atcoder_histories order by id DESC limit 1",
         )
         .fetch_one(&self.connection)
         .instrument(span)
-        .await
-        .with_context(|| "failed to get latest problem solve history in database session")
+        .await {
+Ok(history) => {
+                return Ok(history.into());
+            }
+            Err(sqlx::Error::RowNotFound) => {
+                tracing::warn!("There seems to be no solve data in database.");
+                Ok(AtcoderSolveCount::new(0, 0,0,Utc::now()))
+            }
+            Err(e) => {
+                bail!("failed to get latest solve data in database session: {:?}",e)
+            }
+        }
     }
 }

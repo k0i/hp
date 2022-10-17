@@ -4,12 +4,18 @@ use serde::{Deserialize, Serialize};
 pub struct WakatimeData {
     language: WakatimeLanguage,
     daily_avg: WakatimeDailyAvg,
+    activities: WakatimeActivities,
 }
 impl WakatimeData {
-    pub fn new(language: WakatimeLanguage, daily_avg: WakatimeDailyAvg) -> Self {
+    pub fn new(
+        language: WakatimeLanguage,
+        daily_avg: WakatimeDailyAvg,
+        activities: WakatimeActivities,
+    ) -> Self {
         Self {
             language,
             daily_avg,
+            activities,
         }
     }
 }
@@ -45,4 +51,18 @@ struct WakatimeCurrentUser {
 struct WakatimeInsightTimes {
     seconds: f64,
     text: String,
+}
+
+#[derive(Deserialize, Debug, Serialize)]
+pub struct WakatimeActivities {
+    data: WakatimeActivitiesData,
+}
+#[derive(Deserialize, Debug, Serialize)]
+struct WakatimeActivitiesData {
+    days: Vec<WakatimeActivityDataPerDay>,
+}
+#[derive(Deserialize, Debug, Serialize)]
+struct WakatimeActivityDataPerDay {
+    date: String,
+    total: f64,
 }

@@ -1,6 +1,9 @@
-use crate::domain::{
-    model::article::Article,
-    repository::{article_repository::ArticleRepository, common::BaseRepository},
+use crate::{
+    domain::{
+        model::article::Article,
+        repository::{article_repository::ArticleRepository, common::BaseRepository},
+    },
+    infra::datamodel,
 };
 use anyhow::{Context, Result};
 use async_trait::async_trait;
@@ -19,25 +22,27 @@ impl ArticleRepositoryImpl {
 #[async_trait]
 impl BaseRepository<Article> for ArticleRepositoryImpl {
     async fn get(&self, id: &crate::domain::model::common::ID, span: Span) -> Result<Article> {
-        sqlx::query_as!(
-            Article,
+        let data = sqlx::query_as!(
+            datamodel::article::Article,
             "select id as `id:_`,title,content,created_at,updated_at from articles where id = ?",
             id
         )
         .fetch_one(&self.connection)
         .instrument(span)
         .await
-        .with_context(|| "failed to get article in database session")
+        .with_context(|| "failed to get article in database session")?;
+        Ok(data.into())
     }
     async fn list(&self, span: Span) -> Result<Vec<Article>> {
-        sqlx::query_as!(
-            Article,
+        let data = sqlx::query_as!(
+            datamodel::article::Article,
             "select id as `id:_`,title,content,created_at,updated_at from articles"
         )
         .fetch_all(&self.connection)
         .instrument(span)
         .await
-        .with_context(|| "failed to list articles in database session")
+        .with_context(|| "failed to list articles in database session")?;
+        Ok(data.into_iter().map(|d| d.into()).collect())
     }
     async fn create(&self, entity: Article, span: Span) -> Result<Article> {
         sqlx::query!(

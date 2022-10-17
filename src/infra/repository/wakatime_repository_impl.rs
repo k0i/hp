@@ -1,5 +1,5 @@
 use crate::domain::{
-    model::wakatime::{WakatimeDailyAvg, WakatimeLanguage},
+    model::wakatime::{WakatimeActivities, WakatimeDailyAvg, WakatimeLanguage},
     repository::wakatime_repository::WakatimeRepository,
 };
 use anyhow::{Context, Result};
@@ -34,6 +34,16 @@ impl WakatimeRepository for WakatimeRepositoryImpl {
             .await
             .expect("Failed to get daily average data from wakatime.")
             .json::<WakatimeDailyAvg>()
+            .await
+            .with_context(|| "Failed to parse daily average response from wakatime.")
+    }
+    async fn get_wakatime_activities(&self) -> Result<WakatimeActivities> {
+        self.client
+            .get("https://wakatime.com/api/v1/users/current/insights/days/last_7_days")
+            .send()
+            .await
+            .expect("Failed to get daily average data from wakatime.")
+            .json::<WakatimeActivities>()
             .await
             .with_context(|| "Failed to parse daily average response from wakatime.")
     }

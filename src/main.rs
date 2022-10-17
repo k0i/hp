@@ -19,6 +19,6 @@ async fn main() -> std::io::Result<()> {
     let listener = TcpListener::bind(addr).expect("Failed to bind random port");
     match run(listener, connection_pool, configuration.wakatime_api_key) {
         Ok(server) => server.await,
-        _ => panic!("Failed to run server"),
+        Err(e) => panic!("Error occured: {}", e),
     }
 }
