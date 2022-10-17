@@ -4,9 +4,8 @@ import { Article } from "../../types/article";
 import { getPath } from "../../utils/fs";
 
 export default async function handler(
-_req: NextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse<{}>
-
 ) {
   try {
     const response = await fetch(
@@ -27,7 +26,7 @@ _req: NextApiRequest,
         }
       )
     );
-    return  res.status(200).end();
+    return await res.status(200);
   } catch (error) {
     throw error;
   }

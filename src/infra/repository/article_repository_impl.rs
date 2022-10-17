@@ -5,10 +5,10 @@ use crate::{
     },
     infra::datamodel,
 };
-use anyhow::Result;
+use anyhow::{Context, Result};
 use async_trait::async_trait;
 use sqlx::MySqlPool;
-use tracing::Span;
+use tracing::{Instrument, Span};
 
 pub struct ArticleRepositoryImpl {
     connection: MySqlPool,
