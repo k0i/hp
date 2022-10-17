@@ -2,7 +2,7 @@ import fs from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  _req: NextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse<{}>
 ) {
   try {
@@ -17,7 +17,7 @@ export default async function handler(
         console.log("Successfully generate wakatime response json");
       }
     });
-    return res.status(200).end();
+    return await res.status(200);
   } catch (error) {
     throw error;
   }
