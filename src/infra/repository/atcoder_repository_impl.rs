@@ -8,7 +8,7 @@ use crate::{
 };
 use anyhow::{bail, Context, Result};
 use async_trait::async_trait;
-use chrono::Utc;
+use chrono::{Timelike, Utc};
 use reqwest::Client;
 use sqlx::MySqlPool;
 use tracing::{Instrument, Span};
@@ -68,8 +68,18 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
                 h
             }
         };
-        if last_one.created_at().timestamp() - Utc::now().timestamp() > 60 * 60 * 24 {
-            self.create_problem_solve_history(last_one, span).await?;
+        if (last_one.created_at().timestamp() - Utc::now().timestamp() >= 60 * 60 * 24 - 600
+            || last_one.id() == 0)
+            && Utc::now().hour() == 15
+            && Utc::now().minute() == 0
+        {
+            let data = AtcoderSolveCount::new(
+                last_one.id() + 1,
+                history.count(),
+                history.rank(),
+                Utc::now(),
+            );
+            self.create_problem_solve_history(data, span).await?;
         } else {
             tracing::warn!(
                 "The last data is too new. This operation is supposed to be called once in a day"
