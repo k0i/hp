@@ -344,7 +344,10 @@ export const getStaticProps: GetStaticProps = async () => {
   const latestContest = contestHistories[contestHistories.length - 1];
   const acCount = acCountHistories[acCountHistories.length - 1].ac_count;
   const solveCount = acCountHistories[acCountHistories.length - 1];
-  const previousCount = acCountHistories[acCountHistories.length - 2];
+  const previousCount =
+    acCountHistories.length > 1
+      ? acCountHistories[acCountHistories.length - 2]
+      : acCountHistories[acCountHistories.length - 1];
   const contestParticipationCount = contestHistories.length;
   return {
     props: {
