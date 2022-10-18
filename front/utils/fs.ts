@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
 import { Article } from "../types/article";
 import { WakatimeInfo } from "../types/wakatime";
 import { AtcoderInfo } from "../types/atcoder";
@@ -10,25 +9,16 @@ export const getPath = (folder: string) => {
 };
 
 export const getFileContent = (filename: string, folder: string) => {
-  const POSTS_PATH = getPath(folder);
-  return fs.readFileSync(path.join(POSTS_PATH, filename), "utf8");
+  const ARTICLES_PATH = getPath(folder);
+  return fs.readFileSync(path.join(ARTICLES_PATH, filename), "utf8");
 };
 
 export const getAllArticles = (folder: string) => {
-  const POSTS_PATH = getPath(folder);
+  const ARTICLES_PATH = getPath(folder);
 
-  return fs
-    .readdirSync(POSTS_PATH)
-    .filter((path) => /\\.json?$/.test(path))
-    .map((fileName) => {
-      const source = getFileContent(fileName, folder);
-      const slug = fileName.replace(/\\.md?$/, "");
-      const { data } = matter(source);
-      return {
-        frontmatter: data,
-        slug: slug,
-      };
-    });
+  return fs.readdirSync(ARTICLES_PATH).map((fileName) => {
+    return JSON.parse(getFileContent(fileName, folder)) as Article;
+  });
 };
 
 export const getLastArticle = (folder: string): Article => {

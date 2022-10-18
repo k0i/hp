@@ -20,6 +20,8 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { DefaultSeo } from "next-seo";
+import SEO from "../next-seo.config";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -40,6 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <ChakraProvider theme={theme}>
+        <DefaultSeo {...SEO} />
         <Component {...pageProps} />
       </ChakraProvider>
     </RecoilRoot>
