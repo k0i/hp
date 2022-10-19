@@ -118,7 +118,7 @@ export const convertAtcoderAcDataToGraphData = (
 ) => {
   const graphData: GraphData<ScatterDataSet> = { labels: [], datasets: [] };
   const atcoderACScatterDataSet: ScatterDataSet = {
-    label: "Atcoder Ac Count And Rank Per Day",
+    label: "Ac Count And Rank Per Day",
     data: [],
     backgroundColor: `rgba(165, 55, 253, 1.0)`,
   };

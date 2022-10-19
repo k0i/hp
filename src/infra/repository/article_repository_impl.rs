@@ -1,13 +1,16 @@
 use crate::{
     domain::{
-        model::article::Article,
+        model::{
+            article::{Article, Tag},
+            common::ID,
+        },
         repository::{article_repository::ArticleRepository, common::BaseRepository},
     },
-    infra::datamodel,
+    infra::datamodel::{self, article_tag::ArticleTag},
 };
 use anyhow::{Context, Result};
 use async_trait::async_trait;
-use sqlx::MySqlPool;
+use sqlx::{MySql, MySqlPool, QueryBuilder};
 use tracing::{Instrument, Span};
 
 pub struct ArticleRepositoryImpl {
@@ -22,16 +25,33 @@ impl ArticleRepositoryImpl {
 #[async_trait]
 impl BaseRepository<Article> for ArticleRepositoryImpl {
     async fn get(&self, id: &crate::domain::model::common::ID, span: Span) -> Result<Article> {
-        let data = sqlx::query_as!(
+        let article_data = sqlx::query_as!(
             datamodel::article::Article,
-            "select id as `id:_`,title,content,created_at,updated_at from articles where id = ?",
+            "SELECT id as `id:_`, title, content, created_at, updated_at FROM articles WHERE id = ?",
             id
         )
         .fetch_one(&self.connection)
         .instrument(span)
         .await
         .with_context(|| "failed to get article in database session")?;
-        Ok(data.into())
+        let tags_span = Span::current();
+        let tags_data = sqlx::query_as!(
+            datamodel::tag::Tag,
+            "SELECT t.id, t.name, t.created_at, t.updated_at FROM tags t INNER JOIN article_tags at ON t.id = at.tag_id  WHERE at.article_id = ?",
+            id
+        )
+        .fetch_all(&self.connection)
+        .instrument(tags_span)
+        .await
+        .with_context(|| "failed to list attached tags in database session")?;
+
+        let mut article: Article = article_data.into();
+        let tags = tags_data
+            .into_iter()
+            .map(|t| t.into())
+            .collect::<Vec<Tag>>();
+        article.set_tags(tags);
+        Ok(article)
     }
     async fn list(&self, span: Span) -> Result<Vec<Article>> {
         let data = sqlx::query_as!(
@@ -45,35 +65,37 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
         Ok(data.into_iter().map(|d| d.into()).collect())
     }
     async fn create(&self, entity: Article, span: Span) -> Result<Article> {
+        let article: datamodel::article::Article = entity.into();
         sqlx::query!(
         "INSERT INTO articles (id, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-        entity.id(),
-        entity.title(),
-        entity.content(),
-        entity.created_at(),
-        entity.updated_at()
+        article.id,
+        article.title,
+        article.content,
+        article.created_at,
+        article.updated_at
     )
         .execute(&self.connection)
         .instrument(span)
         .await
         .with_context(|| "failed to create article in database session")?;
         let get_span = Span::current();
-        self.get(entity.id(), get_span).await
+        self.get(&ID::from(article.id), get_span).await
     }
     async fn update(&self, entity: Article, span: Span) -> Result<Article> {
+        let article: datamodel::article::Article = entity.into();
         sqlx::query!(
             "UPDATE articles SET title = ?, content = ?, updated_at = ? WHERE id = ?",
-            entity.title(),
-            entity.content(),
-            entity.updated_at(),
-            entity.id()
+            article.title,
+            article.content,
+            article.updated_at,
+            article.id
         )
         .execute(&self.connection)
         .instrument(span)
         .await
         .with_context(|| "failed to update article in database session")?;
         let get_span = Span::current();
-        self.get(entity.id(), get_span).await
+        self.get(&ID::from(article.id), get_span).await
     }
     async fn delete(&self, entity: Article, span: Span) -> Result<()> {
         sqlx::query!("DELETE FROM articles WHERE id = ?", entity.id())
@@ -83,6 +105,46 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
             .with_context(|| "failed to delete article in database session")?;
         Ok(())
     }
+    async fn enter_transaction(&self, span: Span) -> Result<sqlx::Transaction<'_, sqlx::MySql>> {
+        let transaction = self
+            .connection
+            .begin()
+            .instrument(span)
+            .await
+            .with_context(|| "failed to enter transaction in database session")?;
+        Ok(transaction)
+    }
 }
 
-impl ArticleRepository for ArticleRepositoryImpl {}
+#[async_trait]
+impl ArticleRepository for ArticleRepositoryImpl {
+    async fn attach_tags(&self, entity: Article, span: Span) -> Result<Article> {
+        let attaching_tag_ids = entity
+            .tags()
+            .iter()
+            .map(|t| vec![t.id()])
+            .collect::<Vec<_>>();
+        let article_tags = (0..attaching_tag_ids.len()).map(|i| ArticleTag {
+            id: 0,
+            article_id: entity.id().to_string(),
+            tag_id: attaching_tag_ids[i][0].to_string(),
+            created_at: chrono::Utc::now(),
+            updated_at: chrono::Utc::now(),
+        });
+        let mut query_builder: QueryBuilder<MySql> = QueryBuilder::new(
+            "INSERT INTO article_tags (article_id, tag_id, created_at, updated_at)",
+        );
+        query_builder.push_values(article_tags, |mut b, article_tag| {
+            b.push_bind(article_tag.article_id);
+            b.push_bind(article_tag.tag_id);
+            b.push_bind(article_tag.created_at);
+            b.push_bind(article_tag.updated_at);
+        });
+        query_builder
+            .build()
+            .execute(&self.connection)
+            .instrument(span)
+            .await?;
+        Ok(entity)
+    }
+}

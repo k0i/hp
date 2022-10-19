@@ -14,31 +14,31 @@ import type { GetStaticProps } from "next";
 import Head from "next/head";
 import { ReactNode, useState } from "react";
 import { motion } from "framer-motion";
-import { AwsBadge } from "../components/common/awsBadge";
-import { NavBar } from "../components/common/navbar";
-import { DownloadButton } from "../components/downloadButton";
-import { BarGraph } from "../components/graph/bar";
-import { BarandLineGraph } from "../components/graph/barAndLine";
-import { AtcoderRateIndicatior } from "../components/whoami/atcoder/atcoderRateIndicatior";
-import { AtcoderSolveDelta } from "../components/whoami/atcoder/atcoderSolveDelta";
+import { AwsBadge } from "../../components/common/awsBadge";
+import { NavBar } from "../../components/common/navbar";
+import { DownloadButton } from "../../components/downloadButton";
+import { BarGraph } from "../../components/graph/bar";
+import { BarandLineGraph } from "../../components/graph/barAndLine";
+import { AtcoderRateIndicatior } from "../../components/whoami/atcoder/atcoderRateIndicatior";
+import { AtcoderSolveDelta } from "../../components/whoami/atcoder/atcoderSolveDelta";
 import {
   AtcoderAcResult,
   AtcoderContestResult,
   AtcoderInfo,
-} from "../types/atcoder";
-import { WakatimeInfo } from "../types/wakatime";
-import { generateAtcoderGradientColor } from "../utils/atcoderRateColor";
-import { diffDates, getPastDate } from "../utils/date";
-import { getLatestAtcoderInfo, getLatestWakatimeInfo } from "../utils/fs";
+} from "../../types/atcoder";
+import { WakatimeInfo } from "../../types/wakatime";
+import { generateAtcoderGradientColor } from "../../utils/atcoderRateColor";
+import { diffDates, getPastDate } from "../../utils/date";
+import { getLatestAtcoderInfo, getLatestWakatimeInfo } from "../../utils/fs";
 import {
   convertAtcoderAcDataToGraphData,
   convertAtcoderContestDataToGraphData,
   convertWakatimeActivitiesDataToGraphData,
   convertWakatimeLanguagesDataToGraphData,
-} from "../utils/graphData";
-import { ATCODER_GRAPH_DATA_COUNT } from "../const";
-import { PolarGraph } from "../components/graph/polar";
-import { ScatterGraph } from "../components/graph/scatter";
+} from "../../utils/graphData";
+import { ATCODER_GRAPH_DATA_COUNT } from "../../const";
+import { PolarGraph } from "../../components/graph/polar";
+import { ScatterGraph } from "../../components/graph/scatter";
 
 const graphID = [
   "hoursOfCoding",
@@ -75,7 +75,7 @@ const Home = (props: Props) => {
   const { day } = diffDates(new Date("2020-04-01"), today);
   const state = Object.fromEntries(
     graphID.map((x, i) => {
-      if (i === 0 || i === 2) {
+      if (i === 1 || i === 3) {
         return [x, true];
       } else {
         return [x, false];
@@ -202,6 +202,21 @@ const Home = (props: Props) => {
             ) : (
               <></>
             )}
+
+            <Box position="relative" h="30vw" w="60vw" my={8}>
+              {graphState[`${graphID[2]}`] ? (
+                <BarandLineGraph
+                  graphData={atcoderGraphInfo.graphData}
+                  lineData={atcoderGraphInfo.lineData}
+                  barData={atcoderGraphInfo.barData}
+                  title="Atcoder Rate and Performance"
+                />
+              ) : graphState[`${graphID[3]}`] ? (
+                <ScatterGraph data={atcoderACInfo.graphData} title="" />
+              ) : (
+                <></>
+              )}
+            </Box>
             <Stack direction="row" spacing={8} pt={4} pb={2} mx={2} w="75%">
               <Stat
                 flex="2"
@@ -231,61 +246,6 @@ const Home = (props: Props) => {
                 </StatNumber>
                 <StatHelpText>{atcoderLatestContest.ContestName}</StatHelpText>
               </Stat>
-              <Stat
-                border="1px"
-                borderColor="gray.200"
-                ml={2}
-                p={2}
-                borderRadius="lg"
-              >
-                <StatLabel>Number of Atcoder contest entries</StatLabel>
-                <StatNumber>
-                  <Text as="i">{atcoderContestParticipationCount} </Text>
-                  times
-                </StatNumber>
-                <StatHelpText>
-                  Last participation:{" "}
-                  {atcoderLatestContest.EndTime.substring(0, 10)}
-                </StatHelpText>
-              </Stat>
-            </Stack>
-            <Box position="relative" h="30vw" w="60vw" my={8}>
-              {graphState[`${graphID[2]}`] ? (
-                <BarandLineGraph
-                  graphData={atcoderGraphInfo.graphData}
-                  lineData={atcoderGraphInfo.lineData}
-                  barData={atcoderGraphInfo.barData}
-                  title="Atcoder Rate and Performance"
-                />
-              ) : graphState[`${graphID[3]}`] ? (
-                <ScatterGraph data={atcoderACInfo.graphData} title="Ac Count" />
-              ) : (
-                <></>
-              )}
-            </Box>
-            <Stack direction="row" spacing={12} pt={4} pb={2} w="75%">
-              <Box
-                w="30%"
-                as={motion.div}
-                animation={animationFiveSecound}
-                boxShadow={graphState[`${graphID[2]}`] ? "2xl" : ""}
-                id={graphID[2]}
-                opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
-                onMouseOver={(e) => {
-                  const state = { ...graphState };
-                  Object.keys(state).forEach((k) => {
-                    if (k === graphID[3]) {
-                      state[k] = false;
-                    }
-                  });
-                  setGraphState({ ...state, [e.currentTarget.id]: true });
-                }}
-              >
-                <AtcoderRateIndicatior
-                  oldRating={atcoderLatestContest.OldRating}
-                  newRating={atcoderLatestContest.NewRating}
-                />
-              </Box>
               <Stat
                 border="1px"
                 borderColor="gray.200"
@@ -320,6 +280,45 @@ const Home = (props: Props) => {
                     previous={props.previousCount}
                     latest={props.solveCount}
                   />
+                </StatHelpText>
+              </Stat>
+            </Stack>
+            <Stack direction="row" spacing={12} pt={4} pb={2} w="75%">
+              <Box
+                w="50%"
+                boxShadow={graphState[`${graphID[2]}`] ? "2xl" : ""}
+                id={graphID[2]}
+                opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
+                onMouseOver={(e) => {
+                  const state = { ...graphState };
+                  Object.keys(state).forEach((k) => {
+                    if (k === graphID[3]) {
+                      state[k] = false;
+                    }
+                  });
+                  setGraphState({ ...state, [e.currentTarget.id]: true });
+                }}
+              >
+                <AtcoderRateIndicatior
+                  oldRating={atcoderLatestContest.OldRating}
+                  newRating={atcoderLatestContest.NewRating}
+                />
+              </Box>
+              <Stat
+                border="1px"
+                borderColor="gray.200"
+                ml={2}
+                p={2}
+                borderRadius="lg"
+              >
+                <StatLabel>Number of Atcoder contest entries</StatLabel>
+                <StatNumber>
+                  <Text as="i">{atcoderContestParticipationCount} </Text>
+                  times
+                </StatNumber>
+                <StatHelpText>
+                  Last participation:{" "}
+                  {atcoderLatestContest.EndTime.substring(0, 10)}
                 </StatHelpText>
               </Stat>
             </Stack>

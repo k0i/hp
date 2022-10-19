@@ -17,7 +17,7 @@ import NextLink from "next/link";
 const Links: Array<{ name: string; path: string }> = [
   { name: "Top", path: "/" },
   { name: "Whoami", path: "/whoami" },
-  { name: "Posts", path: "posts" },
+  { name: "Articles", path: "/articles" },
 ];
 
 const NavLink = ({
