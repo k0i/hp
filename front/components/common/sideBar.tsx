@@ -4,7 +4,6 @@ import {
   Box,
   CloseButton,
   Flex,
-  useColorModeValue,
   Drawer,
   DrawerContent,
   Text,
@@ -19,7 +18,6 @@ import {
   ListItem,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 
 export const SimpleSidebar = ({
   children,
@@ -30,7 +28,7 @@ export const SimpleSidebar = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+    <Box minH="100vh" maxW="80%">
       <SidebarContent
         toc={toc}
         onClose={() => onClose}
@@ -50,7 +48,7 @@ export const SimpleSidebar = ({
         </DrawerContent>
       </Drawer>
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 290 }} px={20} bgColor="white">
+      <Box ml={{ base: 0, md: 290 }} px={20} bgColor="gray.900">
         {children}
       </Box>
     </Box>
@@ -71,7 +69,6 @@ const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
   };
   return (
     <Box
-      bg="gray.100"
       w={{ base: "full", md: 280 }}
       pos="fixed"
       h="full"
@@ -82,7 +79,7 @@ const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
         h="20"
         alignItems="center"
         justifyContent="center"
-        bgColor="white"
+        bgColor="gray.900"
         mb="20px"
       >
         <Button onClick={scrollToTop} variant="outline" color="purple.300">
@@ -93,13 +90,16 @@ const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
       {toc}
       <Spacer h="20px" />
       <Box>
-        <Center bgColor="white">
+        <Center bgColor="gray.900">
           <VStack>
             <Text fontSize="md" as="b">
               最新記事
             </Text>
             <OrderedList>
-              <ListItem _hover={{ boxShadow: "sm", bgColor: "gray.50" }} py="2">
+              <ListItem
+                _hover={{ boxShadow: "sm", bgColor: "gray.600" }}
+                py="2"
+              >
                 Lorem ipsum dolor sit amet
               </ListItem>
               <ListItem>Consectetur adipiscing elit</ListItem>
@@ -124,9 +124,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       px={{ base: 4, md: 24 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
       justifyContent="flex-start"
       {...rest}
     >

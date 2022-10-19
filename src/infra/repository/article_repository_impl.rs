@@ -1,3 +1,5 @@
+use std::collections::{HashMap, HashSet};
+
 use crate::{
     domain::{
         model::{
@@ -54,15 +56,54 @@ impl BaseRepository<Article> for ArticleRepositoryImpl {
         Ok(article)
     }
     async fn list(&self, span: Span) -> Result<Vec<Article>> {
-        let data = sqlx::query_as!(
-            datamodel::article::Article,
-            "select id as `id:_`,title,content,created_at,updated_at from articles"
+        let rows = sqlx::query!(
+            r#"
+            SELECT a.*, t.id as tagid, t.name, at.article_id, at.tag_id FROM articles a 
+	        INNER JOIN article_tags at ON a.id = at.article_id
+	        INNER JOIN tags t  ON t.id = at.tag_id;
+            "#
         )
         .fetch_all(&self.connection)
         .instrument(span)
         .await
         .with_context(|| "failed to list articles in database session")?;
-        Ok(data.into_iter().map(|d| d.into()).collect())
+        let mut article_tag_mapping = HashMap::new();
+        let mut articles = vec![];
+        let mut articles_set = HashSet::new();
+        for r in rows {
+            if !articles_set.contains(&r.id) {
+                articles.push(datamodel::article::Article {
+                    id: r.id.clone(),
+                    title: r.title,
+                    content: r.content,
+                    created_at: r.created_at,
+                    updated_at: r.updated_at,
+                });
+                articles_set.insert(r.id);
+            }
+
+            let v = article_tag_mapping.entry(r.article_id).or_insert(vec![]);
+            v.push(datamodel::tag::Tag {
+                id: r.tagid,
+                name: r.name,
+                created_at: r.created_at,
+                updated_at: r.updated_at,
+            });
+        }
+        let articles = articles
+            .into_iter()
+            .map(|a| {
+                let mapped_tags = article_tag_mapping.remove(&a.id);
+                if let Some(mapped_tags) = mapped_tags {
+                    let mut article: Article = a.into();
+                    article.set_tags(mapped_tags.into_iter().map(|t| t.into()).collect());
+                    article
+                } else {
+                    a.into()
+                }
+            })
+            .collect::<Vec<Article>>();
+        Ok(articles)
     }
     async fn create(&self, entity: Article, span: Span) -> Result<Article> {
         let article: datamodel::article::Article = entity.into();

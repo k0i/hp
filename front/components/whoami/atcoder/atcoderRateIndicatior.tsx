@@ -22,7 +22,7 @@ export const AtcoderRateIndicatior = ({ oldRating, newRating }: Props) => {
       borderColor="gray.200"
       p={2}
       borderRadius="lg"
-      bgGradient={`linear(to-t, ${latestRateColor.color} ,white ${latestRateColor.ratio}%)`}
+      bgGradient={`linear(to-t, ${latestRateColor.color} ,black ${latestRateColor.ratio}%)`}
     >
       <StatLabel>Atcoder Rate</StatLabel>
       <StatNumber>{newRating}</StatNumber>

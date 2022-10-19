@@ -1,3 +1,4 @@
+import { withTheme } from "@emotion/react";
 import React from "react";
 import { PolarArea } from "react-chartjs-2";
 import { DataSet, GraphData } from "../../types/graph";
@@ -14,18 +15,21 @@ export const PolarGraph = ({ data, title }: Props) => (
     }}
     options={{
       plugins: {
-        legend: { position: "top" },
-        title: { text: title, display: true },
+        legend: { position: "top", labels: { color: "white" } },
+        title: { text: title, display: true, color: "white" },
       },
       scales: {
         r: {
+          ticks: { color: "white" },
           pointLabels: {
+            color: "white",
             display: true,
             centerPointLabels: true,
             font: {
               size: 12,
             },
           },
+          grid: { color: "gray" },
         },
       },
     }}

@@ -1,11 +1,11 @@
 import { Container, SimpleGrid } from "@chakra-ui/react";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { NavBar } from "../../components/common/navbar";
 import { BlogPostWithImage } from "../../components/articles/articleCard";
 import { Article } from "../../types/article";
 import { getAllArticles } from "../../utils/fs";
+import { TAG_COLOR } from "../../const";
 interface Props {
   articles: Article[];
 }
@@ -19,13 +19,13 @@ const Home = ({ articles }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar>
-        <Container maxW={"100%"} py={5} centerContent={true}>
+        <Container maxW={"80%"} py={5} centerContent={true}>
           <Container
-            maxW={"95%"}
+            maxW={"90%"}
             minH="50vh"
             pt={4}
             centerContent={true}
-            bgColor="white"
+            bgColor="gray.900"
           >
             <SimpleGrid minChildWidth="360px" spacing="1px" w="100%">
               {articles.map((a) => (
@@ -35,6 +35,12 @@ const Home = ({ articles }: Props) => {
                   createdAt={a.created_at}
                   id={a.id}
                   key={a.id}
+                  tags={a.tags.map((t) => ({
+                    name: t.name,
+                    key: t.id,
+                    size: "md",
+                    color: TAG_COLOR[t.name as keyof typeof TAG_COLOR],
+                  }))}
                 />
               ))}
             </SimpleGrid>

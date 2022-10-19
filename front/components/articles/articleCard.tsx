@@ -16,9 +16,16 @@ interface Props {
   content: string;
   createdAt: string;
   id: string;
+  tags: { size: string; key: string; name: string; color: string }[];
 }
 
-export const BlogPostWithImage = ({ title, content, createdAt, id }: Props) => {
+export const BlogPostWithImage = ({
+  title,
+  content,
+  createdAt,
+  id,
+  tags,
+}: Props) => {
   return (
     <Center py={3}>
       <Link href={`articles/${id}`}>
@@ -26,8 +33,10 @@ export const BlogPostWithImage = ({ title, content, createdAt, id }: Props) => {
           <Box
             maxW={"445px"}
             w={"full"}
-            bg={useColorModeValue("white", "gray.900")}
+            bg="gray.900"
             boxShadow={"md"}
+            border="1px"
+            borderColor="white"
             _hover={{ boxShadow: "2xl", bgColor: "blackAlpha.900" }}
             rounded={"xl"}
             p={4}
@@ -35,28 +44,17 @@ export const BlogPostWithImage = ({ title, content, createdAt, id }: Props) => {
           >
             <Stack>
               <Text
-                color={"green.500"}
                 textTransform={"uppercase"}
                 fontWeight={800}
                 fontSize={"sm"}
                 letterSpacing={1.1}
               >
-                <TagLiner
-                  tags={[
-                    { size: "sm", key: "key", label: "react", color: "purple" },
-                    { size: "sm", key: "key2", label: "rust", color: "teal" },
-                    { size: "sm", key: "key3", label: "DB", color: "cyan" },
-                  ]}
-                />
+                <TagLiner tags={tags} />
               </Text>
-              <Heading
-                color={useColorModeValue("gray.700", "white")}
-                fontSize={"2xl"}
-                fontFamily={"body"}
-              >
+              <Heading color="gray.200" fontSize={"2xl"} fontFamily={"body"}>
                 {title}
               </Heading>
-              <Text color={"gray.500"}>{content.slice(0, 100)}...</Text>
+              <Text color={"gray.300"}>{content.slice(0, 100)}...</Text>
             </Stack>
             <Stack
               mt={6}

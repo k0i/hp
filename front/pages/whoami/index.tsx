@@ -100,8 +100,13 @@ const Home = (props: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar>
-        <Container maxW={"100%"} py={5} centerContent={true}>
-          <Container maxW={"95%"} pt={4} centerContent={true} bgColor="white">
+        <Container maxW={"80%"} py={5} centerContent={true}>
+          <Container
+            maxW={"90%"}
+            pt={4}
+            centerContent={true}
+            bgColor="gray.900"
+          >
             <Heading size="xl" py={4}>
               Who am I ?
             </Heading>
@@ -123,7 +128,7 @@ const Home = (props: Props) => {
                 animation={animationTwoSecound}
                 border="1px"
                 borderColor="gray.200"
-                bgColor="purple.100"
+                bgColor="purple.900"
                 p={2}
                 borderRadius="lg"
                 boxShadow={graphState[`${graphID[0]}`] ? "2xl" : ""}
@@ -150,7 +155,7 @@ const Home = (props: Props) => {
                 as={motion.div}
                 animation={animationThreeSecound}
                 borderRadius="lg"
-                bgColor="blue.50"
+                bgColor="blue.900"
                 id={graphID[1]}
                 boxShadow={graphState[`${graphID[1]}`] ? "2xl" : ""}
                 opacity={graphState[`${graphID[1]}`] ? "1.0" : "0.7"}
@@ -180,7 +185,7 @@ const Home = (props: Props) => {
               </Stat>
             </Stack>
             {graphState[`${graphID[1]}`] ? (
-              <Box position="relative" h="30vw" w="30vw" my={8}>
+              <Box position="relative" h="25vw" w="29vw" my={8}>
                 <PolarGraph
                   data={convertWakatimeLanguagesDataToGraphData(
                     props.language,
@@ -190,7 +195,7 @@ const Home = (props: Props) => {
                 />
               </Box>
             ) : graphState[`${graphID[0]}`] ? (
-              <Box position="relative" h="30vw" w="60vw" my={8}>
+              <Box position="relative" h="25vw" w="50vw" my={8}>
                 <BarGraph
                   data={convertWakatimeActivitiesDataToGraphData(
                     props.activities,
@@ -203,7 +208,7 @@ const Home = (props: Props) => {
               <></>
             )}
 
-            <Box position="relative" h="30vw" w="60vw" my={8}>
+            <Box position="relative" h="25vw" w="50vw" my={8}>
               {graphState[`${graphID[2]}`] ? (
                 <BarandLineGraph
                   graphData={atcoderGraphInfo.graphData}
@@ -227,7 +232,7 @@ const Home = (props: Props) => {
                 animation={animationFiveSecound}
                 borderRadius="lg"
                 boxShadow={graphState[`${graphID[2]}`] ? "2xl" : ""}
-                bgGradient={`linear(to-t, ${latestPerformanceColor.color} ,white ${latestPerformanceColor.ratio}%)`}
+                bgGradient={`linear(to-t, ${latestPerformanceColor.color} ,black ${latestPerformanceColor.ratio}%)`}
                 id={graphID[2]}
                 opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
                 onMouseOver={(e) => {
@@ -323,7 +328,12 @@ const Home = (props: Props) => {
               </Stat>
             </Stack>
           </Container>
-          <Container maxW={"95%"} py={2} centerContent={true} bgColor="white">
+          <Container
+            maxW={"90%"}
+            py={2}
+            centerContent={true}
+            bgColor="gray.900"
+          >
             <Heading size="xl" py={4}>
               Achivement
             </Heading>

@@ -41,11 +41,13 @@ const NavLink = ({
       href={path}
     >
       {highlight ? (
-        <Button color="purple.500" isDisabled={true}>
+        <Button color="gray.700" bg="gray.800" isDisabled={true}>
           {name}
         </Button>
       ) : (
-        <Button color="purple.500">{name}</Button>
+        <Button color="purple.500" bg="gray.700">
+          {name}
+        </Button>
       )}
     </Link>
   </NextLink>
@@ -55,7 +57,7 @@ export const NavBar = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box bg="gray.900" px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
             <HStack as={"nav"} spacing={4}>
@@ -80,6 +82,7 @@ export const NavBar = ({ children }: { children: ReactNode }) => {
               <IconButton
                 aria-label="Github Repository"
                 fontSize="30px"
+                bg="gray.900"
                 icon={<FaGithub />}
                 ml={10}
               />
