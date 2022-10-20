@@ -72,7 +72,7 @@ const Home = (props: Props) => {
   const atcoderAcCount = props.acCount;
   const atcoderContestParticipationCount = props.contestParticipationCount;
   const today = new Date();
-  const { day } = diffDates(new Date("2020-04-01"), today);
+  const { day } = diffDates(new Date("2020-12-01"), today);
   const state = Object.fromEntries(
     graphID.map((x, i) => {
       if (i === 1 || i === 3) {
@@ -102,7 +102,7 @@ const Home = (props: Props) => {
       <NavBar>
         <Container maxW={"80%"} py={5} centerContent={true}>
           <Container
-            maxW={"90%"}
+            maxW={"100%"}
             pt={4}
             centerContent={true}
             bgColor="gray.900"
@@ -121,7 +121,7 @@ const Home = (props: Props) => {
               <Stat border="1px" borderColor="gray.200" p={2} borderRadius="lg">
                 <StatLabel>Days since I became an Engineer</StatLabel>
                 <StatNumber>{day} days</StatNumber>
-                <StatHelpText>2020-04-01 ~ {getPastDate(0)}</StatHelpText>
+                <StatHelpText>2020-12-01 ~ {getPastDate(0)}</StatHelpText>
               </Stat>
               <Stat
                 as={motion.div}
@@ -201,7 +201,7 @@ const Home = (props: Props) => {
                     props.activities,
                     7
                   )}
-                  title="Lasr 7 days Activities"
+                  title="Last 7 days Activities"
                 />
               </Box>
             ) : (
@@ -249,7 +249,9 @@ const Home = (props: Props) => {
                 <StatNumber>
                   Performance: {atcoderLatestContest.Performance}
                 </StatNumber>
-                <StatHelpText>{atcoderLatestContest.ContestName}</StatHelpText>
+                <StatHelpText>
+                  {atcoderLatestContest.ContestScreenName.slice(0, 6)}
+                </StatHelpText>
               </Stat>
               <Stat
                 border="1px"
@@ -271,14 +273,9 @@ const Home = (props: Props) => {
                   setGraphState({ ...state, [e.currentTarget.id]: true });
                 }}
               >
-                <StatLabel>
-                  Atcoder AC counts
-                  <Text as="cite" pl={1}>
-                    (compared to {getPastDate(1)})
-                  </Text>
-                </StatLabel>
+                <StatLabel>Atcoder AC counts</StatLabel>
                 <StatNumber pr={4}>
-                  {atcoderAcCount} ({props.solveCount.ac_rank}th)
+                  {atcoderAcCount} ({props.solveCount.ac_rank}th){" "}
                 </StatNumber>
                 <StatHelpText>
                   <AtcoderSolveDelta
@@ -294,15 +291,6 @@ const Home = (props: Props) => {
                 boxShadow={graphState[`${graphID[2]}`] ? "2xl" : ""}
                 id={graphID[2]}
                 opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
-                onMouseOver={(e) => {
-                  const state = { ...graphState };
-                  Object.keys(state).forEach((k) => {
-                    if (k === graphID[3]) {
-                      state[k] = false;
-                    }
-                  });
-                  setGraphState({ ...state, [e.currentTarget.id]: true });
-                }}
               >
                 <AtcoderRateIndicatior
                   oldRating={atcoderLatestContest.OldRating}
@@ -329,7 +317,7 @@ const Home = (props: Props) => {
             </Stack>
           </Container>
           <Container
-            maxW={"90%"}
+            maxW={"100%"}
             py={2}
             centerContent={true}
             bgColor="gray.900"

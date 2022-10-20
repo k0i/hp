@@ -90,7 +90,7 @@ export const NavBar = ({ children }: { children: ReactNode }) => {
           </Flex>
         </Flex>
       </Box>
-      <Box p={2}>{children}</Box>
+      <Box>{children}</Box>
     </>
   );
 };

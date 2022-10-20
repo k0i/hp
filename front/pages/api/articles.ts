@@ -13,7 +13,6 @@ export default async function handler(
     );
     const json = (await response.json()) as Array<Article>;
     const mdFilePath = getPath("content");
-    console.log(json);
     json.forEach((a) =>
       fs.writeFile(`${mdFilePath}/${a.id}.json`, JSON.stringify(a), (err) => {
         if (err) {

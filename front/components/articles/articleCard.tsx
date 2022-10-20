@@ -31,8 +31,8 @@ export const BlogPostWithImage = ({
       <Link href={`articles/${id}`}>
         <a>
           <Box
-            maxW={"445px"}
-            w={"full"}
+            maxW="90%"
+            h="300px"
             bg="gray.900"
             boxShadow={"md"}
             border="1px"
@@ -43,18 +43,11 @@ export const BlogPostWithImage = ({
             overflow={"hidden"}
           >
             <Stack>
-              <Text
-                textTransform={"uppercase"}
-                fontWeight={800}
-                fontSize={"sm"}
-                letterSpacing={1.1}
-              >
-                <TagLiner tags={tags} />
-              </Text>
+              <TagLiner tags={tags} />
               <Heading color="gray.200" fontSize={"2xl"} fontFamily={"body"}>
                 {title}
               </Heading>
-              <Text color={"gray.300"}>{content.slice(0, 100)}...</Text>
+              <Text color={"gray.300"}>{content.slice(0, 70)}...</Text>
             </Stack>
             <Stack
               mt={6}
@@ -62,13 +55,7 @@ export const BlogPostWithImage = ({
               spacing={4}
               align={"center"}
               justifyContent="end"
-            >
-              <Avatar icon={<AiOutlineUser fontSize="1.5rem" />} />
-              <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-                <Text fontWeight={600}>k0i</Text>
-                <Text color={"gray.500"}>{createdAt.slice(0, 10)}</Text>
-              </Stack>
-            </Stack>
+            ></Stack>
           </Box>
         </a>
       </Link>

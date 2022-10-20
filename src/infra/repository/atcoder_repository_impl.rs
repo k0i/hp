@@ -8,7 +8,7 @@ use crate::{
 };
 use anyhow::{bail, Context, Result};
 use async_trait::async_trait;
-use chrono::{Timelike, Utc};
+use chrono::Utc;
 use reqwest::Client;
 use sqlx::MySqlPool;
 use tracing::{Instrument, Span};
@@ -68,11 +68,10 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
                 h
             }
         };
-        if (last_one.created_at().timestamp() - Utc::now().timestamp() >= 60 * 60 * 24 - 600
-            || last_one.id() == 0)
-            && Utc::now().hour() == 15
-            && Utc::now().minute() == 0
+        if last_one.created_at().timestamp() - Utc::now().timestamp() >= 60 * 60 * 24 - 600
+            || last_one.id() == 0
         {
+            tracing::info!("Inserting new solve history. last one: {:?}", last_one);
             let data = AtcoderSolveCount::new(
                 last_one.id() + 1,
                 history.count(),
