@@ -7,6 +7,8 @@ import { MarkDownBuilder } from "../../components/common/markdownBuilder";
 import Head from "next/head";
 import { NavBar } from "../../components/common/navbar";
 import { Container, Heading, Text } from "@chakra-ui/react";
+import { TAG_COLOR } from "../../const";
+import { TitleWithTags } from "../../components/articles/titleWithTags";
 
 interface Props {
   article: Article;
@@ -16,6 +18,12 @@ interface Params extends ParsedUrlQuery {
 }
 
 const Home = ({ article }: Props) => {
+  const tags = article.tags.map((t) => ({
+    name: t.name,
+    key: t.id,
+    size: "lg",
+    color: TAG_COLOR[t.name as keyof typeof TAG_COLOR],
+  }));
   return (
     <>
       <NextSeo
@@ -36,10 +44,11 @@ const Home = ({ article }: Props) => {
       </Head>
       <NavBar>
         <Container maxW={"75%"} py={5} centerContent={true} pl={10}>
-          <Heading size="xl" py={2} as="h1" id="#title">
-            {article.title}
-          </Heading>
-          <Text as="em">{article.created_at.slice(0, 10)}</Text>
+          <TitleWithTags
+            title={article.title}
+            tags={tags}
+            date={article.created_at.slice(0, 10)}
+          />
         </Container>
         <MarkDownBuilder markdown={article.content} />
       </NavBar>

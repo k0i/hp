@@ -31,8 +31,8 @@ export const MarkDownBuilder = ({ markdown }: Props) => {
   const h1 = result.filter((r: any) => r.props?.level === 1);
 
   return (
-    <>
-      <SimpleSidebar toc={<TOC h1={h1} />}>
+    <SimpleSidebar toc={<TOC h1={h1} />}>
+      <Box bgColor="gray.900" px="20">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
@@ -46,7 +46,7 @@ export const MarkDownBuilder = ({ markdown }: Props) => {
               />
             ),
             h2: ({ node, ...props }) => (
-              <Heading {...props} as="h2" size="lg" p={8} />
+              <Heading {...props} as="h2" size="lg" p={8} textColor="white" />
             ),
             h3: ({ node, ...props }) => (
               <Heading {...props} as="h3" size="md" p={6} />
@@ -61,14 +61,16 @@ export const MarkDownBuilder = ({ markdown }: Props) => {
               <Heading {...props} as="h6" size="xs" p={4} />
             ),
             blockquote: ({ node, ...props }) => (
-              <Box bg="gray.100" w="100%" p={4}>
+              <Box bg="gray.600" w="100%" p={4} mb={8}>
                 <Text as="cite">{props.children}</Text>
               </Box>
             ),
             a: ({ node, ...props }) => (
-              <Link href={props.href} isExternal p={2} color="purple.700">
-                {props.children} <ExternalLinkIcon mx="2px" />
-              </Link>
+              <Box>
+                <Link href={props.href} isExternal p={2} color="purple.300">
+                  {props.children} <ExternalLinkIcon mx="2px" />
+                </Link>
+              </Box>
             ),
 
             code({ node, inline, className, children, ...props }) {
@@ -91,20 +93,20 @@ export const MarkDownBuilder = ({ markdown }: Props) => {
         >
           {markdown}
         </ReactMarkdown>
-      </SimpleSidebar>
-    </>
+      </Box>
+    </SimpleSidebar>
   );
 };
 type p = {
   h1: any[];
 };
 const TOC = ({ h1 }: p): ReactElement => (
-  <Box px={4} bgColor="white">
+  <Box px={4} bgColor="gray.800">
     <List>
       {h1.map((h) => (
         <NextLink href={`#${h.props.children}`} passHref key={h.props.children}>
           <Link>
-            <ListItem _hover={{ boxShadow: "sm", bgColor: "gray.50" }} py="2">
+            <ListItem _hover={{ boxShadow: "sm", bgColor: "gray.600" }} py="2">
               <Text as="em">
                 <ListIcon as={BsPatchCheckFill} color="teal.300" />
                 {h.props.children}

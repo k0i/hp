@@ -9,7 +9,8 @@ export const theme = extendTheme({
     global: {
       "html, body": {
         lineHeight: "200%",
-        bgColor: "gray.200",
+        bgColor: "black",
+        color: "gray.200",
       },
       a: {
         color: "teal.500",

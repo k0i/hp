@@ -28,10 +28,28 @@ export const BarandLineGraph = ({
           // @ts-ignore
           stepped: true as any,
           order: 1,
+          borderColor: "gray",
         },
       ],
     }}
     options={{
+      scales: {
+        y: {
+          ticks: {
+            color: "white",
+            // Include a dollar sign in the ticks
+            callback: function (value, index, ticks) {
+              return value + "h";
+            },
+          },
+          grid: { color: "gray" },
+        },
+        x: {
+          ticks: {
+            color: "white",
+          },
+        },
+      },
       animation: {
         onComplete: () => {},
         delay: (context) => {

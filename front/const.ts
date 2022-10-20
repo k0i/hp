@@ -19,3 +19,12 @@ export const LANGUAGE_COLOR = {
   Dart: [0, 167, 88],
 };
 export const ATCODER_GRAPH_DATA_COUNT = 10;
+
+export const TAG_COLOR = {
+  CLI: "green",
+  React: "blue",
+  "Next.js": "white",
+  Kyopro: "brown",
+  Web: "gray",
+  Rust: "red",
+} as const;

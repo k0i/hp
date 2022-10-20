@@ -21,14 +21,18 @@ export const ScatterGraph = ({ data, title }: Props) => {
       }}
       options={{
         plugins: {
-          title: { text: title, display: true },
+          title: { text: title, display: true, color: "white" },
         },
         scales: {
           x: {
-            title: { text: "AC Rank", display: true },
+            title: { text: "AC Rank", display: true, color: "white" },
+            ticks: { color: "white" },
+            grid: { color: "gray" },
           },
           y: {
-            title: { text: "AC Count", display: true },
+            title: { text: "AC Count", display: true, color: "white" },
+            ticks: { color: "white" },
+            grid: { color: "gray" },
           },
         },
       }}

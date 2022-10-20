@@ -15,7 +15,7 @@ export const BarGraph = ({ data, title }: Props) => (
     options={{
       plugins: {
         legend: { position: "bottom", display: false },
-        title: { text: title, display: true },
+        title: { text: title, display: true, color: "white" },
       },
       animation: {
         onComplete: () => {},
@@ -30,10 +30,17 @@ export const BarGraph = ({ data, title }: Props) => (
       scales: {
         y: {
           ticks: {
+            color: "white",
             // Include a dollar sign in the ticks
             callback: function (value, index, ticks) {
               return value + "h";
             },
+          },
+          grid: { color: "gray" },
+        },
+        x: {
+          ticks: {
+            color: "white",
           },
         },
       },
