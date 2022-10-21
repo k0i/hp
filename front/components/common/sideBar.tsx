@@ -14,25 +14,33 @@ import {
   Spacer,
   Center,
   VStack,
-  OrderedList,
   ListItem,
+  List,
+  ListIcon,
+  Link,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
-
+import { Article } from "../../types/article";
+import { RiArticleFill } from "react-icons/ri";
+import NextLink from "next/link";
 export const SimpleSidebar = ({
   children,
   toc,
+  articles,
 }: {
   children: ReactNode;
   toc: ReactNode;
+  articles: Article[];
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" maxW="80%">
+    <Box minH="100vh">
       <SidebarContent
         toc={toc}
         onClose={() => onClose}
+        articles={articles}
         display={{ base: "none", md: "block" }}
+        mx={1}
       />
       <Drawer
         autoFocus={false}
@@ -44,13 +52,11 @@ export const SimpleSidebar = ({
         size="full"
       >
         <DrawerContent onClick={onClose}>
-          <SidebarContent onClose={onClose} toc={toc} />
+          <SidebarContent articles={articles} onClose={onClose} toc={toc} />
         </DrawerContent>
       </Drawer>
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 290 }} px={20} bgColor="gray.900">
-        {children}
-      </Box>
+      <Box ml={{ base: 0, md: 330 }}>{children}</Box>
     </Box>
   );
 };
@@ -58,9 +64,10 @@ export const SimpleSidebar = ({
 interface SidebarProps extends BoxProps {
   onClose: () => void;
   toc: ReactNode;
+  articles: Article[];
 }
 
-const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, toc, articles, ...rest }: SidebarProps) => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -69,7 +76,7 @@ const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
   };
   return (
     <Box
-      w={{ base: "full", md: 280 }}
+      w={{ base: "full", md: 300 }}
       pos="fixed"
       h="full"
       rounded={"2xl"}
@@ -81,6 +88,7 @@ const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
         justifyContent="center"
         bgColor="gray.900"
         mb="20px"
+        rounded={"xl"}
       >
         <Button onClick={scrollToTop} variant="outline" color="purple.300">
           Top
@@ -90,22 +98,26 @@ const SidebarContent = ({ onClose, toc, ...rest }: SidebarProps) => {
       {toc}
       <Spacer h="20px" />
       <Box>
-        <Center bgColor="gray.900">
-          <VStack>
+        <Center bgColor="gray.900" rounded={"xl"}>
+          <VStack py={4}>
             <Text fontSize="md" as="b">
               最新記事
             </Text>
-            <OrderedList>
-              <ListItem
-                _hover={{ boxShadow: "sm", bgColor: "gray.600" }}
-                py="2"
-              >
-                Lorem ipsum dolor sit amet
-              </ListItem>
-              <ListItem>Consectetur adipiscing elit</ListItem>
-              <ListItem>Integer molestie lorem at massa</ListItem>
-              <ListItem>Facilisis in pretium nisl aliquet</ListItem>
-            </OrderedList>
+            <List spacing={3} px={4}>
+              {articles.map((a) => (
+                <NextLink href={`/articles/${a.id}`} passHref key={a.id}>
+                  <Link>
+                    <ListItem
+                      _hover={{ boxShadow: "sm", bgColor: "gray.600" }}
+                      key={a.id}
+                    >
+                      <ListIcon as={RiArticleFill} color="gray.500" />
+                      {a.title}
+                    </ListItem>
+                  </Link>
+                </NextLink>
+              ))}
+            </List>
           </VStack>
         </Center>
       </Box>

@@ -20,13 +20,7 @@ const Home = ({ articles }: Props) => {
       </Head>
       <NavBar>
         <Container maxW={"80%"} py={5} centerContent={true}>
-          <Container
-            maxW={"90%"}
-            minH="50vh"
-            pt={4}
-            centerContent={true}
-            bgColor="gray.900"
-          >
+          <Container maxW={"100%"} py={8} centerContent={true}>
             <SimpleGrid minChildWidth="360px" spacing="1px" w="100%">
               {articles.map((a) => (
                 <BlogPostWithImage

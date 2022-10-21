@@ -8,7 +8,7 @@ interface Props {
 }
 export const ArticleTag = ({ size, label, color }: Props) => {
   return (
-    <Tag size={size} key={label} variant="outline" colorScheme={color} mr={2}>
+    <Tag size={size} key={label} variant="outline" colorScheme={color} mx={2}>
       <TagLabel>{label}</TagLabel>
     </Tag>
   );

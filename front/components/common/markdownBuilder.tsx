@@ -17,11 +17,13 @@ import remarkGfm from "remark-gfm";
 import { BsPatchCheckFill } from "react-icons/bs";
 import NextLink from "next/link";
 import { SimpleSidebar } from "./sideBar";
+import { Article } from "../../types/article";
 
 interface Props {
   markdown: string;
+  articles: Article[];
 }
-export const MarkDownBuilder = ({ markdown }: Props) => {
+export const MarkDownBuilder = ({ markdown, articles }: Props) => {
   var CommonMark = require("commonmark");
   var ReactRenderer = require("commonmark-react-renderer");
   var parser = new CommonMark.Parser();
@@ -31,7 +33,7 @@ export const MarkDownBuilder = ({ markdown }: Props) => {
   const h1 = result.filter((r: any) => r.props?.level === 1);
 
   return (
-    <SimpleSidebar toc={<TOC h1={h1} />}>
+    <SimpleSidebar toc={<TOC h1={h1} />} articles={articles}>
       <Box bgColor="gray.900" px="20">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
@@ -66,11 +68,9 @@ export const MarkDownBuilder = ({ markdown }: Props) => {
               </Box>
             ),
             a: ({ node, ...props }) => (
-              <Box>
-                <Link href={props.href} isExternal p={2} color="purple.300">
-                  {props.children} <ExternalLinkIcon mx="2px" />
-                </Link>
-              </Box>
+              <Link href={props.href} isExternal p={2} color="purple.300">
+                {props.children} <ExternalLinkIcon mx="2px" />
+              </Link>
             ),
 
             code({ node, inline, className, children, ...props }) {
@@ -101,7 +101,7 @@ type p = {
   h1: any[];
 };
 const TOC = ({ h1 }: p): ReactElement => (
-  <Box px={4} bgColor="gray.800">
+  <Box px={4} bgColor="gray.800" rounded={"xl"}>
     <List>
       {h1.map((h) => (
         <NextLink href={`#${h.props.children}`} passHref key={h.props.children}>

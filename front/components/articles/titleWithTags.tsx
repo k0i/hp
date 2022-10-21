@@ -1,4 +1,4 @@
-import { Text, Heading, VStack, Badge, Code } from "@chakra-ui/react";
+import { Text, Heading, VStack, Badge, Flex } from "@chakra-ui/react";
 import React from "react";
 import { TagLiner } from "./tagLiner";
 
@@ -9,14 +9,12 @@ interface Props {
 }
 export const TitleWithTags = ({ title, tags, date }: Props) => {
   return (
-    <VStack textAlign="center">
-      <Heading size="lg" py={2} as="h1" id="#title">
+    <VStack textAlign="center" bgColor="black" pb={4}>
+      <Heading size="lg" py={4} as="h1" id="#title">
         {title}
       </Heading>
       {tags.length !== 0 ? <TagLiner tags={tags} /> : <></>}
-      <Badge colorScheme="purple" variant="outline" px={4}>
-        <Text as="em">{date}</Text>
-      </Badge>
+      <Text as="em">{date}</Text>
     </VStack>
   );
 };
