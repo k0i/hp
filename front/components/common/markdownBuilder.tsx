@@ -12,7 +12,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import { ReactElement } from "react-markdown/lib/react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { xonokai } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 import { BsPatchCheckFill } from "react-icons/bs";
 import NextLink from "next/link";
@@ -79,7 +79,7 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
                 <SyntaxHighlighter
                   // eslint-disable-next-line react/no-children-prop
                   children={String(children).replace(/\n$/, "")}
-                  style={atomDark}
+                  style={xonokai}
                   language={match[1] ?? ""}
                   PreTag="div"
                 />

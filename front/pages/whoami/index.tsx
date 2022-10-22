@@ -29,7 +29,11 @@ import {
 import { WakatimeInfo } from "../../types/wakatime";
 import { generateAtcoderGradientColor } from "../../utils/atcoderRateColor";
 import { diffDates, getPastDate } from "../../utils/date";
-import { getLatestAtcoderInfo, getLatestWakatimeInfo } from "../../utils/fs";
+import {
+  getLatestAtcoderInfo,
+  getLatestHealthChecksInfo,
+  getLatestWakatimeInfo,
+} from "../../utils/fs";
 import {
   convertAtcoderAcDataToGraphData,
   convertAtcoderContestDataToGraphData,
@@ -39,6 +43,8 @@ import {
 import { ATCODER_GRAPH_DATA_COUNT } from "../../const";
 import { PolarGraph } from "../../components/graph/polar";
 import { ScatterGraph } from "../../components/graph/scatter";
+import { HealthCheckInfo } from "../../types/healthchecks";
+import { HealthCheckIndicator } from "../../components/whoami/healthCheckIndicator";
 
 const graphID = [
   "hoursOfCoding",
@@ -59,7 +65,8 @@ type Props = {
   contestParticipationCount: number;
   children: ReactNode;
 } & AtcoderInfo &
-  WakatimeInfo;
+  WakatimeInfo &
+  HealthCheckInfo;
 
 const animationTwoSecound = `${animationKeyframes} 2s ease-in-out infinite`;
 const animationThreeSecound = `${animationKeyframes} 3s ease-in-out infinite`;
@@ -68,9 +75,7 @@ const Home = (props: Props) => {
   const hoursOfCoding = props.daily_avg.data.current_user.total.text;
   const dailyAvg = props.daily_avg.data.current_user.daily_average.text;
   const languageData = props.language.data.languages;
-  const atcoderLatestContest = props.latestContest;
-  const atcoderAcCount = props.acCount;
-  const atcoderContestParticipationCount = props.contestParticipationCount;
+  const { latestContest, acCount, contestParticipationCount, checks } = props;
   const today = new Date();
   const { day } = diffDates(new Date("2020-12-01"), today);
   const state = Object.fromEntries(
@@ -89,7 +94,7 @@ const Home = (props: Props) => {
   );
   const atcoderACInfo = convertAtcoderAcDataToGraphData(props.acCountHistories);
   const latestPerformanceColor = generateAtcoderGradientColor(
-    atcoderLatestContest.Performance
+    latestContest.Performance
   );
 
   return (
@@ -101,6 +106,9 @@ const Home = (props: Props) => {
       </Head>
       <NavBar>
         <Container maxW={"80%"} py={5} centerContent={true}>
+          <Container maxW={"70%"} centerContent={true} pb={6}>
+            <HealthCheckIndicator checks={checks} />
+          </Container>
           <Container
             maxW={"100%"}
             pt={4}
@@ -247,10 +255,10 @@ const Home = (props: Props) => {
               >
                 <StatLabel>Latest Atcoder Contest</StatLabel>
                 <StatNumber>
-                  Performance: {atcoderLatestContest.Performance}
+                  Performance: {latestContest.Performance}
                 </StatNumber>
                 <StatHelpText>
-                  {atcoderLatestContest.ContestScreenName.slice(0, 6)}
+                  {latestContest.ContestScreenName.slice(0, 6)}
                 </StatHelpText>
               </Stat>
               <Stat
@@ -275,7 +283,7 @@ const Home = (props: Props) => {
               >
                 <StatLabel>Atcoder AC counts</StatLabel>
                 <StatNumber pr={4}>
-                  {atcoderAcCount} ({props.solveCount.ac_rank}th){" "}
+                  {acCount} ({props.solveCount.ac_rank}th){" "}
                 </StatNumber>
                 <StatHelpText>
                   <AtcoderSolveDelta
@@ -293,8 +301,8 @@ const Home = (props: Props) => {
                 opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
               >
                 <AtcoderRateIndicatior
-                  oldRating={atcoderLatestContest.OldRating}
-                  newRating={atcoderLatestContest.NewRating}
+                  oldRating={latestContest.OldRating}
+                  newRating={latestContest.NewRating}
                 />
               </Box>
               <Stat
@@ -306,12 +314,11 @@ const Home = (props: Props) => {
               >
                 <StatLabel>Number of Atcoder contest entries</StatLabel>
                 <StatNumber>
-                  <Text as="i">{atcoderContestParticipationCount} </Text>
+                  <Text as="i">{contestParticipationCount} </Text>
                   times
                 </StatNumber>
                 <StatHelpText>
-                  Last participation:{" "}
-                  {atcoderLatestContest.EndTime.substring(0, 10)}
+                  Last participation: {latestContest.EndTime.substring(0, 10)}
                 </StatHelpText>
               </Stat>
             </Stack>
@@ -338,6 +345,7 @@ export default Home;
 export const getStaticProps: GetStaticProps = async () => {
   const { language, daily_avg, activities } = await getLatestWakatimeInfo();
   const { contestHistories, acCountHistories } = await getLatestAtcoderInfo();
+  const { checks } = await getLatestHealthChecksInfo();
   const latestContest = contestHistories[contestHistories.length - 1];
   const acCount = acCountHistories[acCountHistories.length - 1].ac_count;
   const solveCount = acCountHistories[acCountHistories.length - 1];
@@ -358,6 +366,7 @@ export const getStaticProps: GetStaticProps = async () => {
       solveCount,
       previousCount,
       contestParticipationCount,
+      checks,
     },
   };
 };

@@ -1,4 +1,4 @@
-import { Text, Heading, VStack, Badge, Flex } from "@chakra-ui/react";
+import { Text, Heading, VStack } from "@chakra-ui/react";
 import React from "react";
 import { TagLiner } from "./tagLiner";
 
