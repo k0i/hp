@@ -3,6 +3,7 @@ import path from "path";
 import { Article } from "../types/article";
 import { WakatimeInfo } from "../types/wakatime";
 import { AtcoderInfo } from "../types/atcoder";
+import { HealthCheckInfo } from "../types/healthchecks";
 
 export const getPath = (folder: string) => {
   return path.join(process.cwd(), `/${folder}`);
@@ -34,3 +35,6 @@ export const getLatestWakatimeInfo = (): WakatimeInfo =>
 
 export const getLatestAtcoderInfo = (): AtcoderInfo =>
   JSON.parse(fs.readFileSync("atcoder.json", "utf8")) as AtcoderInfo;
+
+export const getLatestHealthChecksInfo = (): HealthCheckInfo =>
+  JSON.parse(fs.readFileSync("healthChecks.json", "utf8")) as HealthCheckInfo;
