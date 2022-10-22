@@ -68,7 +68,7 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
                 h
             }
         };
-        if last_one.created_at().timestamp() - Utc::now().timestamp() >= 60 * 60 * 24 - 600
+        if Utc::now().timestamp() - last_one.created_at().timestamp() >= 60 * 60 * 24 - 120
             || last_one.id() == 0
         {
             tracing::info!("Inserting new solve history. last one: {:?}", last_one);
