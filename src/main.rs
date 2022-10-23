@@ -9,7 +9,7 @@ use sqlx::MySqlPool;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let subscriber = get_subscriber("web", "info", std::io::stdout);
+    let (subscriber, _guard) = get_subscriber("web", "info", std::io::stdout);
     init_subscriber(subscriber);
     let configuration = get_configuration().expect("Failed to read configuration.");
     let connection_pool = MySqlPool::connect(&configuration.database.connect_string())
