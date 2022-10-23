@@ -1,9 +1,16 @@
 # hp
 my HP
 
-# Condition (2022-10-15)
+
+# Condition (2022-10-23)
 Under development....
 
-![Hut K - Whoami - Google Chrome 15 10 2022 14_03_28](https://user-images.githubusercontent.com/100127291/195969749-5dca903c-16ed-4c26-b174-9fa6bb27d817.png)
+# RoadMap
+- [ ] responsive design
 
-![Hut K - Google Chrome 11 10 2022 21_14_23](https://user-images.githubusercontent.com/100127291/195087408-6fc642b7-a8ff-45cd-8f57-bb689b70e19e.png)
+## Done
+- [x] log management (cloudWatch, opentelemetry) 
+- [x] healthchecks for batch jobs (healthchecks.io)
+- [x] install ssl/tls connection by Let's encrypt's certification
+
+![Jaeger UI - Google Chrome 23 10 2022 19_55_54](https://user-images.githubusercontent.com/100127291/197388191-c661c58a-fce8-4cdf-a3eb-1df508299817.png)
