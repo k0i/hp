@@ -1,7 +1,7 @@
 use crate::configuration::new_reqwest_client;
 use crate::infra::repository::Repositories;
 use crate::routes::health_check::health_check;
-use crate::routes::{articles, atcoder, wakatime};
+use crate::routes::{articles, atcoder, undefined, wakatime};
 use crate::usecase::Usecases;
 use actix_web::dev::Server;
 use actix_web::{web, App, HttpServer};
@@ -36,6 +36,7 @@ pub fn run(
             .service(wakatime::wakatime)
             .service(atcoder::atcoder)
             .app_data(usecases.clone())
+            .default_service(web::route().to(undefined::undefined))
     })
     .listen(listener)?
     .run();
