@@ -24,7 +24,7 @@ where
     let opentelemetry = tracing_opentelemetry::layer().with_tracer(tracer);
     let env_filter =
         EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(env_filter.into()));
-    let file_appender = tracing_appender::rolling::daily("./", "web.log");
+    let file_appender = tracing_appender::rolling::never("./", "web.log");
     let (non_blocking, guard) = tracing_appender::non_blocking(file_appender);
     let formatting_layer = BunyanFormattingLayer::new(name, non_blocking);
 
