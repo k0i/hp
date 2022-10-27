@@ -51,7 +51,7 @@ export const SimpleSidebar = ({
         onOverlayClick={onClose}
         size="full"
       >
-        <DrawerContent onClick={onClose}>
+        <DrawerContent onClick={onClose} bgColor="gray.800">
           <SidebarContent articles={articles} onClose={onClose} toc={toc} />
         </DrawerContent>
       </Drawer>
@@ -82,18 +82,18 @@ const SidebarContent = ({ onClose, toc, articles, ...rest }: SidebarProps) => {
       rounded={"2xl"}
       {...rest}
     >
+ <Center>     <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} /></Center>
       <Flex
         h="20"
         alignItems="center"
         justifyContent="center"
-        bgColor="gray.900"
+        bgColor="gray.800"
         mb="20px"
         rounded={"xl"}
       >
         <Button onClick={scrollToTop} variant="outline" color="purple.300">
           Top
         </Button>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {toc}
       <Spacer h="20px" />
@@ -121,7 +121,6 @@ const SidebarContent = ({ onClose, toc, articles, ...rest }: SidebarProps) => {
           </VStack>
         </Center>
       </Box>
-      <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
     </Box>
   );
 };
