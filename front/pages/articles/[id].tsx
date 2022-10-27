@@ -45,7 +45,7 @@ const Home = ({ article, articles }: Props) => {
       </Head>
       <NavBar>
         <Container maxW="100%" py={5} centerContent={true}>
-          <Container maxW="90%">
+          <Container maxW={{ base: "100%", md: "90%" }}>
             <TitleWithTags
               title={article.title}
               tags={tags}

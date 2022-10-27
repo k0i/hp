@@ -21,26 +21,30 @@ export const HealthCheckIndicator = ({
   const latestSync = checks
     .map((c) => new Date(c.last_ping))
     .reduce((a, b) => (a < b ? a : b));
-  console.log(latestSync.getHours());
-  console.log(latestSync.toLocaleTimeString());
   return (
     <>
       <Stack direction="row" pb={2}>
         <HStack spacing={2}>
           {checks.map((c) => (
-            <Box key={c.name}>
-              <Text size="sm" bgColor="gray.700">
+            <Box
+              key={c.name}
+              bgColor="gray.700"
+              pl={1}
+              rounded={true}
+              borderRadius="sm"
+            >
+              <Text size="sm">
                 {c.name}
                 {c.status === "up" ? (
-                  <Badge ml="1" colorScheme="green">
+                  <Badge ml="1" colorScheme="green" borderRadius="sm">
                     {c.status}
                   </Badge>
                 ) : c.status === "down" ? (
-                  <Badge ml="1" colorScheme="red">
+                  <Badge ml="1" colorScheme="red" borderRadius="sm">
                     {c.status}
                   </Badge>
                 ) : (
-                  <Badge ml="1" colorScheme="yellow">
+                  <Badge ml="1" colorScheme="yellow" borderRadius="sm">
                     delay
                   </Badge>
                 )}
