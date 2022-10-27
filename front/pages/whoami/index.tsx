@@ -105,8 +105,16 @@ const Home = (props: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar>
-        <Container maxW={"80%"} py={5} centerContent={true}>
-          <Container maxW={"70%"} centerContent={true} pb={6}>
+        <Container
+          maxW={{ base: "100%", md: "80%" }}
+          py={5}
+          centerContent={true}
+        >
+          <Container
+            maxW={{ base: "100%", md: "70%" }}
+            centerContent={true}
+            pb={6}
+          >
             <HealthCheckIndicator checks={checks} />
           </Container>
           <Container
@@ -125,7 +133,14 @@ const Home = (props: Props) => {
               label="Resume"
             />
 
-            <Stack direction="row" spacing={8} pt={4} pb={2} mx={2} w="75%">
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 4, md: 8 }}
+              pt={4}
+              pb={2}
+              mx={2}
+              w={{ base: "100%", md: "75%" }}
+            >
               <Stat border="1px" borderColor="gray.200" p={2} borderRadius="lg">
                 <StatLabel>Days since I became an Engineer</StatLabel>
                 <StatNumber>{day} days</StatNumber>
@@ -193,7 +208,12 @@ const Home = (props: Props) => {
               </Stat>
             </Stack>
             {graphState[`${graphID[1]}`] ? (
-              <Box position="relative" h="25vw" w="29vw" my={8}>
+              <Box
+                position="relative"
+                h={{ base: "80vw", md: "25vw" }}
+                w={{ base: "80vw", md: "29vw" }}
+                my={8}
+              >
                 <PolarGraph
                   data={convertWakatimeLanguagesDataToGraphData(
                     props.language,
@@ -203,7 +223,12 @@ const Home = (props: Props) => {
                 />
               </Box>
             ) : graphState[`${graphID[0]}`] ? (
-              <Box position="relative" h="25vw" w="50vw" my={8}>
+              <Box
+                position="relative"
+                h={{ base: "50vw", md: "25vw" }}
+                w={{ base: "80vw", md: "45vw" }}
+                my={8}
+              >
                 <BarGraph
                   data={convertWakatimeActivitiesDataToGraphData(
                     props.activities,
@@ -216,7 +241,12 @@ const Home = (props: Props) => {
               <></>
             )}
 
-            <Box position="relative" h="25vw" w="50vw" my={8}>
+            <Box
+              position="relative"
+              h={{ base: "50vw", md: "25vw" }}
+              w={{ base: "80vw", md: "45vw" }}
+              my={8}
+            >
               {graphState[`${graphID[2]}`] ? (
                 <BarandLineGraph
                   graphData={atcoderGraphInfo.graphData}
@@ -230,7 +260,14 @@ const Home = (props: Props) => {
                 <></>
               )}
             </Box>
-            <Stack direction="row" spacing={8} pt={4} pb={2} mx={2} w="75%">
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 4, md: 8 }}
+              pt={4}
+              pb={2}
+              mx={2}
+              w={{ base: "100%", md: "75%" }}
+            >
               <Stat
                 flex="2"
                 border="1px"
@@ -293,9 +330,16 @@ const Home = (props: Props) => {
                 </StatHelpText>
               </Stat>
             </Stack>
-            <Stack direction="row" spacing={12} pt={4} pb={2} w="75%">
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 4, md: 8 }}
+              pt={4}
+              pb={2}
+              mx={2}
+              w={{ base: "100%", md: "75%" }}
+            >
               <Box
-                w="50%"
+                w={{ base: "100%", md: "50%" }}
                 boxShadow={graphState[`${graphID[2]}`] ? "2xl" : ""}
                 id={graphID[2]}
                 opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
