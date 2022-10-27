@@ -34,7 +34,7 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
 
   return (
     <SimpleSidebar toc={<TOC h1={h1} />} articles={articles}>
-      <Box bgColor="gray.900" px="20">
+      <Box bgColor="gray.900" px="10">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
@@ -101,7 +101,7 @@ type p = {
   h1: any[];
 };
 const TOC = ({ h1 }: p): ReactElement => (
-  <Box px={4} bgColor="gray.800" rounded={"xl"}>
+  <Box px={4} bgColor="gray.900" rounded={"xl"}>
     <List>
       {h1.map((h) => (
         <NextLink href={`#${h.props.children}`} passHref key={h.props.children}>

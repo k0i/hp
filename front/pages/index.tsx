@@ -1,4 +1,4 @@
-import { Container, Text, Heading } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
 import React from "react";
@@ -31,7 +31,7 @@ const Home = ({
       </Head>
       <NavBar>
         <Container maxW="100%" py={5} centerContent={true}>
-          <Container maxW="90%">
+          <Container maxW={{ base: "100%", md: "90%" }}>
             <TitleWithTags
               title={article.title}
               tags={tags}
@@ -47,7 +47,7 @@ const Home = ({
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const article = await getLastArticle("content");
+  const article = getLastArticle("content");
   const articles = getAllArticles("content").filter((a) => a.id !== article.id);
 
   return {
