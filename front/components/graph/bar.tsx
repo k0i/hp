@@ -31,7 +31,6 @@ export const BarGraph = ({ data, title }: Props) => (
         y: {
           ticks: {
             color: "white",
-            // Include a dollar sign in the ticks
             callback: function (value, index, ticks) {
               return value + "h";
             },
