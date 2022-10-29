@@ -37,9 +37,8 @@ export const BarandLineGraph = ({
         y: {
           ticks: {
             color: "white",
-            // Include a dollar sign in the ticks
             callback: function (value, index, ticks) {
-              return value + "h";
+              return value;
             },
           },
           grid: { color: "gray" },
