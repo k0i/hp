@@ -7,6 +7,7 @@ import {
   ListItem,
   ListIcon,
   Link,
+  Code,
 } from "@chakra-ui/react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -17,7 +18,10 @@ import remarkGfm from "remark-gfm";
 import { BsPatchCheckFill } from "react-icons/bs";
 import NextLink from "next/link";
 import { SimpleSidebar } from "./sideBar";
+import remarkMath from "remark-math";
 import { Article } from "../../types/article";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 interface Props {
   markdown: string;
@@ -36,7 +40,8 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
     <SimpleSidebar toc={<TOC h1={h1} />} articles={articles}>
       <Box bgColor="gray.900" px="10">
         <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
+          remarkPlugins={[remarkGfm, remarkMath]}
+          rehypePlugins={[rehypeKatex]}
           components={{
             h1: ({ node, ...props }) => (
               <Heading
@@ -84,9 +89,9 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
                   PreTag="div"
                 />
               ) : (
-                <code className={className} {...props}>
+                <Code {...props} colorScheme="yellow">
                   {children}
-                </code>
+                </Code>
               );
             },
           }}
