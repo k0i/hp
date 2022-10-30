@@ -24,7 +24,7 @@ export const TAG_COLOR = {
   CLI: "green",
   React: "blue",
   "Next.js": "white",
-  Kyopro: "brown",
+  Kyopro: "teal",
   Web: "gray",
   Rust: "red",
 } as const;
