@@ -30,6 +30,7 @@
     "react-remark": "^2.1.0",
     "react-syntax-highlighter": "^15.5.0",
     "recoil": "^0.7.5",
+    "rehype-katex": "^6.0.2",
     "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
