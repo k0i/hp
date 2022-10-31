@@ -1,4 +1,4 @@
-import { DownloadIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Button } from "@chakra-ui/react";
 import React from "react";
 
@@ -15,7 +15,7 @@ export const DownloadButton = ({
   label,
 }: Props) => (
   <Button
-    rightIcon={<DownloadIcon />}
+    rightIcon={<ExternalLinkIcon />}
     colorScheme={colorScheme}
     variant={variant}
     as="a"

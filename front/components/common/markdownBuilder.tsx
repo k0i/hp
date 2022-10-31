@@ -38,7 +38,7 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
 
   return (
     <SimpleSidebar toc={<TOC h1={h1} />} articles={articles}>
-      <Box bgColor="gray.900" px="10">
+      <Box bgColor="gray.900" px={10} pb={30}>
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeKatex]}
