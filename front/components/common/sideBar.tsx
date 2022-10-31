@@ -56,7 +56,9 @@ export const SimpleSidebar = ({
         </DrawerContent>
       </Drawer>
       <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 330 }}>{children}</Box>
+      <Box ml={{ base: 0, md: 330 }} pb={50}>
+        {children}
+      </Box>
     </Box>
   );
 };
@@ -82,7 +84,9 @@ const SidebarContent = ({ onClose, toc, articles, ...rest }: SidebarProps) => {
       rounded={"2xl"}
       {...rest}
     >
- <Center>     <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} /></Center>
+      <Center>
+        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+      </Center>
       <Flex
         h="20"
         alignItems="center"
