@@ -48,7 +48,7 @@ const Home = ({ articles }: Props) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const articles = await getAllArticles("content");
+  const articles = getAllArticles("content");
   return {
     props: { articles },
   };

@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+    mysql:
+        image: mysql:8.0
+        environment: 
+            - MYSQL_DATABASE=web
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+        ports:
+            - 3306:3306
+
