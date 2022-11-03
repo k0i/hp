@@ -6,7 +6,7 @@ import { NextSeo } from "next-seo";
 import { MarkDownBuilder } from "../../components/common/markdownBuilder";
 import Head from "next/head";
 import { NavBar } from "../../components/common/navbar";
-import { Container, Heading, Text } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { TAG_COLOR } from "../../const";
 import { TitleWithTags } from "../../components/articles/titleWithTags";
 

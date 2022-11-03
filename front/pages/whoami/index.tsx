@@ -9,7 +9,6 @@ import {
   StatNumber,
   StatHelpText,
   keyframes,
-  AspectRatio,
   Show,
   Accordion,
   AccordionItem,
@@ -17,6 +16,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Center,
+  Flex,
 } from "@chakra-ui/react";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
@@ -53,6 +53,7 @@ import { PolarGraph } from "../../components/graph/polar";
 import { ScatterGraph } from "../../components/graph/scatter";
 import { HealthCheckInfo } from "../../types/healthchecks";
 import { HealthCheckIndicator } from "../../components/whoami/healthCheckIndicator";
+import { CehBadge } from "../../components/common/cehBadge";
 
 const graphID = [
   "hoursOfCoding",
@@ -414,7 +415,10 @@ const Home = (props: Props) => {
             <Heading size="xl" py={4}>
               Achivement
             </Heading>
-            <AwsBadge width={200} height={200} />
+            <Flex>
+              <AwsBadge width={200} height={200} />
+              <CehBadge width={200} height={200} />
+            </Flex>
           </Container>
         </Container>
       </NavBar>
@@ -425,9 +429,9 @@ const Home = (props: Props) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { language, daily_avg, activities } = await getLatestWakatimeInfo();
-  const { contestHistories, acCountHistories } = await getLatestAtcoderInfo();
-  const { checks } = await getLatestHealthChecksInfo();
+  const { language, daily_avg, activities } = getLatestWakatimeInfo();
+  const { contestHistories, acCountHistories } = getLatestAtcoderInfo();
+  const { checks } = getLatestHealthChecksInfo();
   const latestContest = contestHistories[contestHistories.length - 1];
   const acCount = acCountHistories[acCountHistories.length - 1].ac_count;
   const solveCount = acCountHistories[acCountHistories.length - 1];

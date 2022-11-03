@@ -39,7 +39,7 @@ export const SimpleSidebar = ({
         toc={toc}
         onClose={() => onClose}
         articles={articles}
-        display={{ base: "none", md: "block" }}
+        display={{ md: "none", lg: "block" }}
         mx={1}
       />
       <Drawer
@@ -55,8 +55,8 @@ export const SimpleSidebar = ({
           <SidebarContent articles={articles} onClose={onClose} toc={toc} />
         </DrawerContent>
       </Drawer>
-      <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 330 }} pb={50}>
+      <MobileNav display={{ md: "flex", lg: "none" }} onOpen={onOpen} />
+      <Box ml={{ md: 0, lg: 330 }} pb={50}>
         {children}
       </Box>
     </Box>
@@ -78,14 +78,14 @@ const SidebarContent = ({ onClose, toc, articles, ...rest }: SidebarProps) => {
   };
   return (
     <Box
-      w={{ base: "full", md: 300 }}
+      w={{ md: "full", lg: 300 }}
       pos="fixed"
       h="full"
       rounded={"2xl"}
       {...rest}
     >
       <Center>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton display={{ md: "flex", lg: "none" }} onClick={onClose} />
       </Center>
       <Flex
         h="20"
@@ -135,8 +135,8 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
+      ml={{ md: 0, lg: 60 }}
+      px={{ md: 4, lg: 24 }}
       height="20"
       alignItems="center"
       borderBottomWidth="1px"
