@@ -17,9 +17,10 @@ export const getFileContent = (filename: string, folder: string) => {
 export const getAllArticles = (folder: string) => {
   const ARTICLES_PATH = getPath(folder);
 
-  return fs.readdirSync(ARTICLES_PATH).map((fileName) => {
+  const articles = fs.readdirSync(ARTICLES_PATH).map((fileName) => {
     return JSON.parse(getFileContent(fileName, folder)) as Article;
   });
+  return articles.reverse();
 };
 
 export const getLastArticle = (folder: string): Article => {
