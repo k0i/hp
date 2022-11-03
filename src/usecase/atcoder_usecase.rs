@@ -26,8 +26,12 @@ where
     T: AtcoderRepository,
 {
     pub async fn get(&self, span: Span) -> Result<AtcoderData> {
-        let contest_histories = self.repository.list_contest_histories().await?;
-        let solve_histories = self.repository.list_problem_solve_histories(span).await?;
+        let (contest_histories, solve_histories) = tokio::join!(
+            self.repository.list_contest_histories(),
+            self.repository.list_problem_solve_histories(span)
+        );
+        let contest_histories = contest_histories?;
+        let solve_histories = solve_histories?;
         Ok(AtcoderData::new(solve_histories, contest_histories))
     }
 }

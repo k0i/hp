@@ -25,9 +25,14 @@ where
     T: WakatimeRepository,
 {
     pub async fn get(&self) -> Result<WakatimeData> {
-        let wakatime_daily_avg = self.repository.get_wakatime_daily_average().await?;
-        let wakatime_language = self.repository.get_wakatime_language().await?;
-        let wakatime_activities = self.repository.get_wakatime_activities().await?;
+        let (wakatime_daily_avg, wakatime_language, wakatime_activities) = tokio::join!(
+            self.repository.get_wakatime_daily_average(),
+            self.repository.get_wakatime_language(),
+            self.repository.get_wakatime_activities()
+        );
+        let wakatime_daily_avg = wakatime_daily_avg?;
+        let wakatime_language = wakatime_language?;
+        let wakatime_activities = wakatime_activities?;
         Ok(WakatimeData::new(
             wakatime_language,
             wakatime_daily_avg,
