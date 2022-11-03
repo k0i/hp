@@ -8,6 +8,9 @@ import {
   ListIcon,
   Link,
   Code,
+  Image,
+  Center,
+  Divider,
 } from "@chakra-ui/react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -43,6 +46,7 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeKatex]}
           components={{
+            p: React.Fragment,
             h1: ({ node, ...props }) => (
               <Heading
                 {...props}
@@ -77,6 +81,12 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
                 {props.children} <ExternalLinkIcon mx="2px" />
               </Link>
             ),
+            img: ({ node, ...props }) => (
+              <Center py={6}>
+                <Image {...props} />
+              </Center>
+            ),
+            hr: ({ node, ...props }) => <Divider my={6} {...props} />,
 
             code({ node, inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
@@ -89,7 +99,7 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
                   PreTag="div"
                 />
               ) : (
-                <Code {...props} colorScheme="yellow">
+                <Code {...props} bgColor="gray.400">
                   {children}
                 </Code>
               );
