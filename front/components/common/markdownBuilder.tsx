@@ -19,6 +19,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { xonokai } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import remarkGfm from "remark-gfm";
 import { BsPatchCheckFill } from "react-icons/bs";
+import { HiCheck } from "react-icons/hi";
 import NextLink from "next/link";
 import { SimpleSidebar } from "./sideBar";
 import remarkMath from "remark-math";
@@ -54,39 +55,88 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
                 size="xl"
                 p={8}
                 id={props.children.toString()}
+                textColor="red.300"
               />
             ),
             h2: ({ node, ...props }) => (
-              <Heading {...props} as="h2" size="lg" p={8} textColor="white" />
+              <Heading
+                {...props}
+                as="h2"
+                size="lg"
+                p={8}
+                textColor="orange.300"
+              />
             ),
             h3: ({ node, ...props }) => (
-              <Heading {...props} as="h3" size="md" p={6} />
+              <Heading
+                {...props}
+                as="h3"
+                size="md"
+                textColor="yellow.300"
+                p={6}
+              />
             ),
             h4: ({ node, ...props }) => (
-              <Heading {...props} as="h4" size="md" p={6} />
+              <Heading
+                {...props}
+                as="h4"
+                size="md"
+                textColor="teal.300"
+                p={6}
+              />
             ),
             h5: ({ node, ...props }) => (
-              <Heading {...props} as="h5" size="xs" p={4} />
+              <Heading
+                {...props}
+                as="h5"
+                size="xs"
+                textColor="blue.300"
+                p={4}
+              />
             ),
             h6: ({ node, ...props }) => (
-              <Heading {...props} as="h6" size="xs" p={4} />
+              <Heading
+                {...props}
+                as="h6"
+                size="xs"
+                textColor="cyan.300"
+                p={4}
+              />
             ),
             blockquote: ({ node, ...props }) => (
-              <Box bg="gray.600" w="100%" p={4} mb={8}>
-                <Text as="cite">{props.children}</Text>
+              <Box bg="gray.700" w="100%" p={4} my={4}>
+                {/* 
+// @ts-ignore */}
+                <Text as="em" {...props} />
               </Box>
             ),
             a: ({ node, ...props }) => (
-              <Link href={props.href} isExternal p={2} color="purple.300">
+              <Link
+                href={props.href}
+                isExternal
+                p={2}
+                color="purple.300"
+                {...props}
+              >
                 {props.children} <ExternalLinkIcon mx="2px" />
               </Link>
             ),
             img: ({ node, ...props }) => (
-              <Center py={6}>
-                <Image {...props} />
+              <Center my={8}>
+                <Image {...props} alt={props.title ?? props.src ?? ""} />
               </Center>
             ),
-            hr: ({ node, ...props }) => <Divider my={6} {...props} />,
+            hr: ({ node, ...props }) => (
+              <Divider my={12} {...props} borderColor="red.400" />
+            ),
+            ul: ({ node, ...props }) => <List my={2} {...props} />,
+            ol: ({ node, ...props }) => <List my={2} {...props} />,
+            li: ({ node, ...props }) => (
+              <ListItem {...props}>
+                <ListIcon as={HiCheck} color="purple.500" />
+                {props.children}
+              </ListItem>
+            ),
 
             code({ node, inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
@@ -99,7 +149,7 @@ export const MarkDownBuilder = ({ markdown, articles }: Props) => {
                   PreTag="div"
                 />
               ) : (
-                <Code {...props} bgColor="gray.400">
+                <Code {...props} colorScheme="gray" mx={2} variant="solid">
                   {children}
                 </Code>
               );

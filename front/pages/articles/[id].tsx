@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { Article } from "../../types/article";
 import { getAllArticles, getFileContent } from "../../utils/fs";
-import { NextSeo } from "next-seo";
+import { ArticleJsonLd } from "next-seo";
 import { MarkDownBuilder } from "../../components/common/markdownBuilder";
 import Head from "next/head";
 import { NavBar } from "../../components/common/navbar";
@@ -25,17 +25,17 @@ const Home = ({ article, articles }: Props) => {
     size: "lg",
     color: TAG_COLOR[t.name as keyof typeof TAG_COLOR],
   }));
+  const path = `/articles/${article.id}`;
   return (
     <>
-      <NextSeo
+      <ArticleJsonLd
+        images={["/favicon.ico"]}
+        url={path}
         title={article.title}
-        description={article.content.slice(0, 20)}
-        openGraph={{
-          type: "website",
-          url: `http:localhost:3000/posts/${article.id}`,
-          title: article.title,
-          description: article.content.slice(0, 20),
-        }}
+        datePublished={article.created_at}
+        dateModified={article.updated_at}
+        authorName="Sojiro Koyama"
+        description={article.tags.map((t) => t.name).join(",")}
       />
 
       <Head>
