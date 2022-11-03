@@ -8,10 +8,10 @@ export const theme = extendTheme({
   styles: {
     global: {
       "html, body": {
-        lineHeight: "200%",
+        lineHeight: "220%",
         bgColor: "black",
-        color: "gray.200",
-        fontSize: "md",
+        color: "gray.100",
+        fontSize: "16px",
       },
       a: {
         color: "teal.500",

@@ -9,13 +9,6 @@ import {
   StatNumber,
   StatHelpText,
   keyframes,
-  Show,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Center,
   Flex,
 } from "@chakra-ui/react";
 import type { GetStaticProps } from "next";
@@ -115,12 +108,12 @@ const Home = (props: Props) => {
       </Head>
       <NavBar>
         <Container
-          maxW={{ base: "100%", md: "80%" }}
+          maxW={{ base: "100%", lg: "80%" }}
           py={5}
           centerContent={true}
         >
           <Container
-            maxW={{ base: "100%", md: "70%" }}
+            maxW={{ base: "100%", lg: "70%" }}
             centerContent={true}
             pb={6}
           >
@@ -141,45 +134,13 @@ const Home = (props: Props) => {
               href="/sojiro_koyama_resume.pdf"
               label="Resume"
             />
-            <Show above="lg">
-              <Stack
-                w="100%"
-                direction={{ sm: "column", md: "column", lg: "row" }}
-                py={6}
-              >
-                <Accordion allowToggle w="100%">
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box flex="1" textAlign="center">
-                          ALL ABOUT ME! (Google Slide)
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                      <Center>
-                        <iframe
-                          src="https://docs.google.com/presentation/d/e/2PACX-1vQm6IcA8uRX6hFs4zmhfBojTZihReX0JfBtdyXcIuqGsJxgUAGi7VVBWpSV3e46R1v1K5Kg9NWLR0Ii/embed?start=false&loop=false&delayms=3000"
-                          frameBorder="0"
-                          width="960"
-                          height="569"
-                          allowFullScreen={true}
-                        ></iframe>
-                      </Center>
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Stack>
-            </Show>
-
             <Stack
               direction={{ base: "column", md: "row" }}
               spacing={{ base: 4, md: 8 }}
               pt={4}
               pb={2}
               mx={2}
-              w={{ base: "100%", md: "75%" }}
+              w={{ base: "100%", lg: "75%" }}
             >
               <Stat border="1px" borderColor="gray.200" p={2} borderRadius="lg">
                 <StatLabel>Days since I became an Engineer</StatLabel>
@@ -250,8 +211,8 @@ const Home = (props: Props) => {
             {graphState[`${graphID[1]}`] ? (
               <Box
                 position="relative"
-                h={{ base: "80vw", md: "25vw" }}
-                w={{ base: "80vw", md: "29vw" }}
+                h={{ base: "80vw", lg: "25vw" }}
+                w={{ base: "80vw", lg: "29vw" }}
                 my={8}
               >
                 <PolarGraph
@@ -265,8 +226,8 @@ const Home = (props: Props) => {
             ) : graphState[`${graphID[0]}`] ? (
               <Box
                 position="relative"
-                h={{ base: "50vw", md: "25vw" }}
-                w={{ base: "80vw", md: "45vw" }}
+                h={{ base: "50vw", lg: "25vw" }}
+                w={{ base: "80vw", lg: "45vw" }}
                 my={8}
               >
                 <BarGraph
@@ -282,8 +243,8 @@ const Home = (props: Props) => {
             )}
             <Box
               position="relative"
-              h={{ base: "50vw", md: "25vw" }}
-              w={{ base: "80vw", md: "45vw" }}
+              h={{ base: "50vw", lg: "25vw" }}
+              w={{ base: "80vw", lg: "45vw" }}
               my={8}
             >
               {graphState[`${graphID[2]}`] ? (
@@ -300,12 +261,12 @@ const Home = (props: Props) => {
               )}
             </Box>
             <Stack
-              direction={{ base: "column", md: "row" }}
+              direction={{ base: "column", lg: "row" }}
               spacing={{ base: 4, md: 8 }}
               pt={4}
               pb={2}
               mx={2}
-              w={{ base: "100%", md: "75%" }}
+              w={{ base: "90%", lg: "75%" }}
             >
               <Stat
                 flex="2"
@@ -370,15 +331,15 @@ const Home = (props: Props) => {
               </Stat>
             </Stack>
             <Stack
-              direction={{ base: "column", md: "row" }}
+              direction={{ base: "column", lg: "row" }}
               spacing={{ base: 4, md: 8 }}
               pt={4}
               pb={2}
               mx={2}
-              w={{ base: "100%", md: "75%" }}
+              w={{ base: "90%", lg: "75%" }}
             >
               <Box
-                w={{ base: "100%", md: "50%" }}
+                w={{ base: "100%", lg: "50%" }}
                 boxShadow={graphState[`${graphID[2]}`] ? "2xl" : ""}
                 id={graphID[2]}
                 opacity={graphState[`${graphID[2]}`] ? "1.0" : "0.7"}
