@@ -21,10 +21,15 @@ export const LANGUAGE_COLOR = {
 export const ATCODER_GRAPH_DATA_COUNT = 10;
 
 export const TAG_COLOR = {
-  CLI: "green",
-  React: "blue",
-  "Next.js": "white",
-  Kyopro: "teal",
+  CLI: "gray",
   Web: "gray",
+  React: "blue",
+  "Next.js": "blue",
+  Kyopro: "teal",
+  Atcoder: "teal",
+  Security: "pink",
+  CEH: "pink",
+  Hacking: "pink",
   Rust: "red",
+  Golang: "cyan",
 } as const;
