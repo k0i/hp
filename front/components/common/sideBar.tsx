@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactText } from "react";
+import React, { ReactNode } from "react";
 import {
   IconButton,
   Box,
@@ -136,10 +136,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, lg: 60 }}
-      px={{ base: 4, lg: 24 }}
+      px={{ base: 0, lg: 24 }}
       height="20"
       alignItems="center"
-      borderBottomWidth="1px"
       justifyContent="flex-start"
       {...rest}
     >
