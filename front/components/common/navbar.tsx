@@ -9,6 +9,7 @@ import {
   Text,
   Button,
   Heading,
+  Show,
 } from "@chakra-ui/react";
 import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/router";
@@ -61,33 +62,37 @@ export const NavBar = ({ children }: { children: ReactNode }) => {
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
             <HStack as={"nav"} spacing={4}>
-              {Links.map((link) => (
-                <NavLink
-                  key={link.name}
-                  name={link.name}
-                  path={link.path}
-                  highlight={router.pathname === link.path}
-                />
-              ))}
+              {Links.filter((link) => router.pathname !== link.path).map(
+                (link) => (
+                  <NavLink
+                    key={link.name}
+                    name={link.name}
+                    path={link.path}
+                    highlight={router.pathname === link.path}
+                  />
+                )
+              )}
             </HStack>
           </HStack>
-          <Flex alignItems={"center"}>
-            <Heading fontWeight={600} fontSize="xl">
-              Blog Hut_
-              <Text as="em" color={"orange.400"}>
-                K
-              </Text>
-            </Heading>
-            <Link href="https://github.com/k0i/hp" isExternal>
-              <IconButton
-                aria-label="Github Repository"
-                fontSize="30px"
-                bg="gray.900"
-                icon={<FaGithub />}
-                ml={10}
-              />
-            </Link>
-          </Flex>
+          <Show above="md">
+            <Flex alignItems={"center"}>
+              <Heading fontWeight={600} fontSize="xl">
+                Blog Hut_
+                <Text as="em" color={"orange.400"}>
+                  K
+                </Text>
+              </Heading>
+              <Link href="https://github.com/k0i/hp" isExternal>
+                <IconButton
+                  aria-label="Github Repository"
+                  fontSize="30px"
+                  bg="gray.900"
+                  icon={<FaGithub />}
+                  ml={10}
+                />
+              </Link>
+            </Flex>
+          </Show>
         </Flex>
       </Box>
       <Box>{children}</Box>
