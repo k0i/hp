@@ -30,7 +30,10 @@ where
             self.repository.list_contest_histories(),
             self.repository.list_problem_solve_histories(span)
         );
-        let contest_histories = contest_histories?;
+        let contest_histories = contest_histories?
+            .into_iter()
+            .filter(|h| h.is_rated())
+            .collect();
         let solve_histories = solve_histories?;
         Ok(AtcoderData::new(solve_histories, contest_histories))
     }

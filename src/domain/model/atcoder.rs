@@ -16,6 +16,12 @@ pub struct AtcoderContestHistory {
     end_time: String,
 }
 
+impl AtcoderContestHistory {
+    pub fn is_rated(&self) -> bool {
+        self.is_rated
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AtcoderSolveCount {
     id: i32,
