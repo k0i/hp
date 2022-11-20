@@ -34,11 +34,8 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
             .expect("Failed to list contest histories from atcoder.")
             .json::<Vec<AtcoderContestHistory>>()
             .await
-            .with_context(|| "Failed to parse atcoder contest histories.");
-        if let Err(e) = histories {
-            return Err(e);
-        }
-        Ok(histories.unwrap())
+            .with_context(|| "Failed to parse atcoder contest histories.")?;
+        Ok(histories)
     }
     async fn list_problem_solve_histories(&self, span: Span) -> Result<Vec<AtcoderSolveCount>> {
         let history = self
@@ -49,11 +46,7 @@ impl AtcoderRepository for AtcoderRepositoryImpl {
             .expect("Failed to get latest solve data from atcoder.")
             .json::<AtcoderSolveCountDTO>()
             .await
-            .with_context(|| "Failed to parse atcoder solve data.");
-        if let Err(e) = history {
-            return Err(e);
-        }
-        let history = history.unwrap();
+            .with_context(|| "Failed to parse atcoder solve data.")?;
         let get_span = Span::current();
         let mut last_one = match self.get_latest_problem_solve_history(get_span).await {
             Ok(h) => h,
