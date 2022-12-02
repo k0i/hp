@@ -34,4 +34,6 @@ export const TAG_COLOR = {
         Hacking: "pink",
         Rust: "red",
         Golang: "cyan",
+        CVE: "pink",
+        strapi: "blue",
 } as const;
