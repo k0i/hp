@@ -98,7 +98,7 @@ export const convertAtcoderContestDataToGraphData = (
                 hoverOffset: 8,
         };
 
-        data.slice(0, index).forEach((c) => {
+        data.slice(index * -1).forEach((c) => {
                 graphData.labels.push(c.ContestScreenName.slice(0, 6));
                 const ratingColor = generateAtcoderGradientColor(c.NewRating);
                 const performanceColor = generateAtcoderGradientColor(c.Performance);
