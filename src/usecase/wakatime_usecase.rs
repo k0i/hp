@@ -1,7 +1,8 @@
 use anyhow::Result;
 
 use crate::domain::{
-    model::wakatime::WakatimeData, repository::wakatime_repository::WakatimeRepository,
+    model::wakatime::{WakatimeActivitiesRange, WakatimeData},
+    repository::wakatime_repository::WakatimeRepository,
 };
 
 pub struct WakatimeUsecase<T>
@@ -28,7 +29,8 @@ where
         let (wakatime_daily_avg, wakatime_language, wakatime_activities) = tokio::join!(
             self.repository.get_wakatime_daily_average(),
             self.repository.get_wakatime_language(),
-            self.repository.get_wakatime_activities()
+            self.repository
+                .get_wakatime_activities(WakatimeActivitiesRange::Last7Days)
         );
         let wakatime_daily_avg = wakatime_daily_avg?;
         let wakatime_language = wakatime_language?;

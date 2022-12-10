@@ -55,14 +55,39 @@ struct WakatimeInsightTimes {
 
 #[derive(Deserialize, Debug, Serialize)]
 pub struct WakatimeActivities {
-    data: WakatimeActivitiesData,
+    pub data: WakatimeActivitiesData,
 }
 #[derive(Deserialize, Debug, Serialize)]
-struct WakatimeActivitiesData {
+pub struct WakatimeActivitiesData {
     days: Vec<WakatimeActivityDataPerDay>,
 }
 #[derive(Deserialize, Debug, Serialize)]
 struct WakatimeActivityDataPerDay {
     date: String,
     total: f64,
+}
+
+#[derive(Debug)]
+pub enum WakatimeActivitiesRange {
+    Last7Days,
+    Last30Days,
+    Last6Months,
+    LastYear,
+}
+
+impl WakatimeActivitiesData {
+    pub fn filter_range(&mut self, range: WakatimeActivitiesRange) {
+        match range {
+            WakatimeActivitiesRange::Last7Days => {
+                self.days.drain(0..self.days.len() - 7);
+            }
+            WakatimeActivitiesRange::Last30Days => {
+                self.days.drain(0..self.days.len() - 30);
+            }
+            WakatimeActivitiesRange::Last6Months => {
+                self.days.drain(0..self.days.len() - 180);
+            }
+            _ => {}
+        };
+    }
 }
