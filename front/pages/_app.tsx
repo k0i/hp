@@ -46,11 +46,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <ChakraProvider theme={theme}>
                                 <DefaultSeo {...SEO} />
                                 <Script
+                                        id="google-analytics-lazy-on-load"
                                         strategy="lazyOnload"
                                         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
                                 />
 
-                                <Script strategy="lazyOnload">
+                                <Script strategy="lazyOnload" id="google-analytics">
                                         {`
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
