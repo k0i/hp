@@ -128,12 +128,6 @@ const Home = (props: Props) => {
                                                 <Heading size="xl" py={4}>
                                                         Who am I ?
                                                 </Heading>
-                                                <DownloadButton
-                                                        colorScheme="purple"
-                                                        variant="outline"
-                                                        href="/sojiro_koyama_resume.pdf"
-                                                        label="Resume"
-                                                />
                                                 <Stack
                                                         direction={{ base: "column", md: "row" }}
                                                         spacing={{ base: 4, md: 8 }}
